@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Enums\RefurbishmentStatus;
 
@@ -12,8 +13,10 @@ use App\Http\Controllers\{
     QuizMatchController,
     StartAdController,
     FinancingRequestController,
-    NotificationController as ApiNotificationController
+    NotificationController as ApiNotificationController,
+    SavedSearchController
 };
+
 use App\Http\Controllers\Admin\{
     BannerController,
     BrandController,
@@ -24,55 +27,104 @@ use App\Http\Controllers\Admin\{
     TransmissionTypeController,
     TrimController,
     TypeController,
-    VehicleStatusController
+    VehicleStatusController,
+    PartnerController,
+    VideoController
 };
 
 use App\Http\Controllers\Draftech\{
-    AuthController as draftechAuthController,
-    FavouriteController
+    AuthController as DraftechAuthController,
+    FavouriteController,
+    ContactUsController,
+    GovernorateController,
+    AreaController,
+    UniversityController,
+    FacultyController,
+    HelpRequestController
 };
 
+/**
+ * ======================================================
+ * AUTHENTICATION ROUTES
+ * ======================================================
+ */
 Route::prefix('auth')->group(function () {
+    // Common authentication endpoints
     Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', config('app.app') === 'kalksat' 
-        ? [AuthController::class, 'login']
-        : [draftechAuthController::class, 'login']
-    );
     Route::post('/verifyOtp', [AuthController::class, 'verifyOtp']);
     Route::post('/resendOtp', [AuthController::class, 'resendOtp']);
-    Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
-    Route::get('/me', config('app.app') === 'kalksat' 
-        ? [AuthController::class, 'me']
-        : [draftechAuthController::class, 'me']
-    )->middleware('auth:api');
-    Route::post('/updateProfile', [AuthController::class, 'updateProfile'])->middleware('auth:api');
-    Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
-    Route::delete('/deleteAccount', [AuthController::class, 'deleteAccount'])->middleware('auth:api');
     
-    // draftech endpoints apis 
-    Route::post('send-otp', [draftechAuthController::class, 'sendOtp']);
-    Route::post('verify-otp', [draftechAuthController::class, 'verifyOtp']);
-    Route::post('update-profile', [draftechAuthController::class, 'updateProfile'])->middleware('auth:api');
-    Route::post('update-password', [draftechAuthController::class, 'updatePassword'])->middleware('auth:api');
-    Route::post('logout', [draftechAuthController::class, 'logout'])->middleware('auth:api');
-    Route::delete('delete-account', [draftechAuthController::class, 'deleteAccount'])->middleware('auth:api');
-    Route::post('/update-phone', [draftechAuthController::class, 'updatephone']);
+    // App-specific login and profile routes
+    $isKalksat = config('app.app') === 'kalksat';
+    $authController = $isKalksat ? AuthController::class : DraftechAuthController::class;
+    
+    Route::post('/login', [$authController, 'login']);
+    Route::get('/me', [$authController, 'me'])->middleware('auth:api');
+    
+    // Kalksat-specific auth routes
+    if ($isKalksat) {
+        Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
+        Route::post('/updateProfile', [AuthController::class, 'updateProfile'])->middleware('auth:api');
+        Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
+        Route::delete('/deleteAccount', [AuthController::class, 'deleteAccount'])->middleware('auth:api');
+    }
+    
+    // Draftech-specific auth routes
+    else {
+        Route::post('send-otp', [DraftechAuthController::class, 'sendOtp']);
+        Route::post('verify-otp', [DraftechAuthController::class, 'verifyOtp']);
+        Route::post('update-profile', [DraftechAuthController::class, 'updateProfile'])->middleware('auth:api');
+        Route::post('update-password', [DraftechAuthController::class, 'updatePassword'])->middleware('auth:api');
+        Route::post('logout', [DraftechAuthController::class, 'logout'])->middleware('auth:api');
+        Route::delete('delete-account', [DraftechAuthController::class, 'deleteAccount'])->middleware('auth:api');
+        Route::post('/update-phone', [DraftechAuthController::class, 'updatephone']);
+    }
+    
+    // Shared auth-protected routes under auth prefix
     Route::post('/favourites/toggle/{carId}', [FavouriteController::class, 'toggleFavourite'])->middleware('auth:api');
-    Route::get('/favourites', [FavouriteController::class, 'myFavourites'])->middleware('auth:api');   
+    Route::get('/favourites', [FavouriteController::class, 'myFavourites'])->middleware('auth:api');
+    Route::post('/financing-requests', [FinancingRequestController::class, 'store'])->middleware('auth:api');
+    Route::get('/requests', [FinancingRequestController::class, 'index'])->middleware('auth:api');
+    Route::post('/cancel-requests', [FinancingRequestController::class, 'cancel'])->middleware('auth:api');
+    Route::get('saved-searches', [SavedSearchController::class, 'index'])->middleware('auth:api');
+    Route::post('saved-searches', [SavedSearchController::class, 'store'])->middleware('auth:api');
+    Route::delete('saved-searches/{id}', [SavedSearchController::class, 'destroy'])->middleware('auth:api');
+    Route::post('Help-Request', [HelpRequestController::class, 'store'])->middleware('auth:api');
+    Route::get('/quiz', [QuizController::class, 'index'])->middleware('auth:api');
+    Route::post('/quiz-answers', [QuizAnswerController::class, 'store'])->middleware('auth:api');
+    Route::get('/quiz/match', [QuizMatchController::class, 'match'])->middleware('auth:api');
 });
 
+/**
+ * ======================================================
+ * FINANCING REQUESTS ROUTES
+ * ======================================================
+ */
 Route::prefix('financing-requests')->middleware('auth:api')->group(function () {
     Route::post('/', [FinancingRequestController::class, 'store']);
     Route::get('/', [FinancingRequestController::class, 'index']);
     Route::post('/cancel', [FinancingRequestController::class, 'cancel']);
 });
 
+/**
+ * ======================================================
+ * NOTIFICATIONS ROUTES
+ * ======================================================
+ */
 Route::get('notifications/user', [ApiNotificationController::class, 'getForUser'])->middleware('auth:api');
 
+/**
+ * ======================================================
+ * CARS ROUTES
+ * ======================================================
+ */
 Route::prefix('cars')->group(function () {
+    // Public car routes
     Route::get('/', [CarController::class, 'all']);
     Route::post('/pagination/{sort_direction?}/{sort_by?}/{page?}/{per_page?}', [CarController::class, 'pagination']);
     Route::get('/{id}', [CarController::class, 'findById']);
+    
+    // Authenticated car routes
     Route::middleware('auth:api')->group(function () {
         Route::post('/', [CarController::class, 'store']);
         Route::put('/{id}', [CarController::class, 'update']);
@@ -80,8 +132,11 @@ Route::prefix('cars')->group(function () {
     });
 });
 
-
-
+/**
+ * ======================================================
+ * VEHICLE CONFIGURATION ROUTES
+ * ======================================================
+ */
 Route::prefix('brands')->group(function () {
     Route::get('/', [BrandController::class, 'indexAPI']);
     Route::get('/{id}', [BrandController::class, 'showAPI']);
@@ -91,6 +146,7 @@ Route::prefix('body_styles')->group(function () {
     Route::get('/', [BodyStyleController::class, 'indexAPI']);
     Route::get('/{id}', [BodyStyleController::class, 'showAPI']);
 });
+
 Route::prefix('models')->group(function () {
     Route::get('/', [CarModelController::class, 'indexAPI']);
     Route::get('/{id}', [CarModelController::class, 'showAPI']);
@@ -136,34 +192,77 @@ Route::prefix('refurbishment_statuses')->group(function () {
     Route::get('/{id}', [VehicleStatusController::class, 'showAPI']);
 });
 
+/**
+ * ======================================================
+ * MARKETING CONTENT ROUTES
+ * ======================================================
+ */
 Route::prefix('banners')->group(function () {
     Route::get('/', [BannerController::class, 'index']);
     Route::get('/{id}', [BannerController::class, 'show']);
 });
 
+Route::prefix('partners')->group(function () {
+    Route::get('/', [PartnerController::class, 'index']);
+    Route::get('/{id}', [PartnerController::class, 'show']);
+});
+
+Route::prefix('videos')->group(function () {
+    Route::get('/', [VideoController::class, 'index']);
+    Route::get('/{id}', [VideoController::class, 'show']);
+});
+
+/**
+ * ======================================================
+ * CALCULATOR ROUTES
+ * ======================================================
+ */
 Route::prefix('calculator')->group(function () {
     Route::post('/car-installment', [CalculatorController::class, 'calculateInstallment']);
     Route::post('/car-price', [CalculatorController::class, 'calculateCarPrice']);
 });
 
+/**
+ * ======================================================
+ * BOOKING ROUTES
+ * ======================================================
+ */
 Route::prefix('book')->middleware('auth:api')->group(function () {
     Route::post('/', [BookController::class, 'makeAppointment']);
     Route::get('/getBookedCars', [BookController::class, 'getBookedCars']);
 });
 
+/**
+ * ======================================================
+ * QUIZZES ROUTES
+ * ======================================================
+ */
 Route::prefix('quizzes')->middleware('auth:api')->group(function () {
     Route::get('/', [QuizController::class, 'index']);
     Route::post('/answers', [QuizAnswerController::class, 'store']);
     Route::get('/match', [QuizMatchController::class, 'match']);
 });
 
+/**
+ * ======================================================
+ * START AD ROUTES
+ * ======================================================
+ */
 Route::prefix('start-ad')->group(function () {
     Route::get('/', [StartAdController::class, 'show']);
 });
 
-// draftech endpoints part 2
-Route::post('complete-profile', [draftechAuthController::class, 'completeRegistration']); 
-Route::post('reset-password', [draftechAuthController::class, 'resetPassword'])->middleware('auth:api');
-
-
-
+/**
+ * ======================================================
+ * DRAFTECH-SPECIFIC ROUTES
+ * ======================================================
+ */
+Route::post('calculate-car-installment', [CalculatorController::class, 'calculateInstallment']);
+Route::post('complete-profile', [DraftechAuthController::class, 'completeRegistration']); 
+Route::post('reset-password', [DraftechAuthController::class, 'resetPassword'])->middleware('auth:api');
+Route::get('/contact-us', [ContactUsController::class, 'index']);
+Route::post('/contact-us', [ContactUsController::class, 'store']);
+Route::get('/governorates', [GovernorateController::class, 'index']);
+Route::get('/areas', [AreaController::class, 'index']);
+Route::get('universities', [UniversityController::class, 'universitiesOnly']);
+Route::get('faculties', [FacultyController::class, 'index']);
