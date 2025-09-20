@@ -61,7 +61,7 @@ class CarResource extends JsonResource
                     "image_url" => !empty($this->resource->brand?->image) 
                         ? Storage::url($this->resource->brand?->image) : ''
                 ],
-                "is_fav" => $user->favouriteCars()->where('car_id', $this->resource->id)->exists() ? true : false,
+                "is_fav" => $user ? ($user->favouriteCars()->where('car_id', $this->resource->id)->exists() ? true : false) : false,
                 "image_url" => null,
                 "images" => !empty($this->resource->images) ? $this->resource->images->map(fn($img)=>[
                     'id' => (int) $img->id,
@@ -79,10 +79,10 @@ class CarResource extends JsonResource
                     !empty($conditions['mechanical_condition']) 
                     ? $conditions['mechanical_condition'] : []    
                 : [],
-                "pivot" => [
+                "pivot" => $user ? [
                     "user_id" => $user->id,
                     "car_id" => (int) $this->resource->id
-                ]
+                ] : []
         ];
     }
 

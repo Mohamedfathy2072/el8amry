@@ -120,7 +120,7 @@ Route::get('notifications/user', [ApiNotificationController::class, 'getForUser'
  */
 Route::prefix('cars')->group(function () {
     // Public car routes
-    Route::get('/', [CarController::class, 'all']);
+    Route::get('/', [CarController::class, 'pagination']);
     Route::post('/pagination/{sort_direction?}/{sort_by?}/{page?}/{per_page?}', [CarController::class, 'pagination']);
     Route::get('/{id}', [CarController::class, 'findById']);
     

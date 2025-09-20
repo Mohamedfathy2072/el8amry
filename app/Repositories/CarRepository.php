@@ -15,6 +15,7 @@ use App\Models\Horsepower;
 use App\Models\Image;
 use App\Models\Size;
 use App\Models\VehicleStatus;
+use App\Models\TransmissionType;
 use App\Enums\RefurbishmentStatus;
 use App\Enums\Feature as FeatureEnum; 
 use App\Enums\Condition as ConditionEnum; 
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\Storage;
 class CarRepository implements CarRepositoryInterface
 {
     // This class will handle database interactions for cars
+    private string $locale = "";
 
     public function all()
     {
@@ -34,16 +36,18 @@ class CarRepository implements CarRepositoryInterface
 
     public function paginate(array $requestData, string $sort_direction, string $sort_by, int $page, int $per_page)
     {
+        $this->locale = $requestData['lang'];
         $query = Car::query();
 
         $search = $requestData['search'] ?? '';
         if (!empty($requestData['search'])) {
-            $brand = Brand::where('name', 'like', "%{$search}%")->first();
-            $model = CarModel::where('name', 'like', "%{$search}%")->first();
+            $brand = Brand::where('name->' . $this->locale, 'like', "%{$search}%")->first();
+            $model = CarModel::where('name->' . $this->locale, 'like', "%{$search}%")->first();
+
             if (!empty($brand)) {
                 $query->where('brand_id', $brand->id);
             }
-            if (!empty($model)) {
+            if (empty($brand) && !empty($model)) {
                 $query->where('car_model_id', $model->id);
             }
             if (empty($brand) && empty($model)) return ['data' => [], 'count' => 0];
@@ -68,6 +72,24 @@ class CarRepository implements CarRepositoryInterface
             $query->where('mileage','<=',$requestData['kilometers']);
         }
 
+        if(!empty($requestData['price_from']) || !empty($requestData['price_to'])) {
+            $requestData['price_range'] = [
+                $requestData['price_from'] ?? null,
+                $requestData['price_to'] ?? null
+            ];
+        }
+        if(!empty($requestData['km_from']) || !empty($requestData['km_to'])) {
+            $requestData['mileage_range'] = [
+                $requestData['km_from'] ?? null,
+                $requestData['km_to'] ?? null
+            ];
+        }
+        if(!empty($requestData['down_payment_from']) || !empty($requestData['down_payment_to'])) {
+            $requestData['down_payment_range'] = [
+                $requestData['down_payment_from'] ?? null,
+                $requestData['down_payment_to'] ?? null
+            ];
+        }
         $this->filterByRange($query, $requestData);
 
         // 🔍 Filter by fuel economy range
@@ -82,15 +104,59 @@ class CarRepository implements CarRepositoryInterface
             });
         }
 
+        if(!empty($requestData['transmission'])){
+            $transmission = $requestData['transmission'];
+            $trans = TransmissionType::where('name->' . $this->locale, 'like', "%{$transmission}%")->first();
+            if (!empty($trans)) {
+                $query->where('transmission_type_id', $trans->id);
+            }
+            if (empty($trans)) return ['data' => [], 'count' => 0];
+        }
 
+        if(!empty($requestData['brand'])){
+            $brand_name = $requestData['brand'];
+            $brand = Brand::where('name->' . $this->locale, 'like', "%{$brand_name}%")->first();
+            if (!empty($brand)) {
+                $query->where('brand_id', $brand->id);
+            }
+            if (empty($brand)) return ['data' => [], 'count' => 0];
+        }
+
+        if(!empty($requestData['model'])){
+            $model_name = $requestData['model'];
+            $model = CarModel::where('name->' . $this->locale, 'like', "%{$model_name}%")->first();
+            if (!empty($model)) {
+                $query->where('car_model_id', $model->id);
+            }
+            if (empty($model)) return ['data' => [], 'count' => 0];
+        }
+          
         if (!empty($requestData['brand_ids'])) {
             $query->whereIn('brand_id', $requestData['brand_ids']);
+        }
+
+        if(!empty($requestData['color'])){
+            $color = $requestData['color'];
+            $query->where('color->' . $this->locale, 'like', "%{$color}%");
+        }
+
+        if(!empty($requestData['location'])){
+            $location = $requestData['location'];
+            $query->where('location', 'like', "%{$location}%");
+        }
+
+        
+        if(!empty($requestData['year'])){
+            $requestData['model_year'] = $requestData['year'];
         }
 
         if (!empty($requestData['body_style_ids'])) {
             $query->whereIn('body_style_id', $requestData['body_style_ids']);
         }
 
+        if(!empty($requestData['condition'])){
+            $requestData['vehicle_status'] = $requestData['condition'];
+        }
         if (!empty($requestData['vehicle_status'])) {
             $vehicleId = $this->getVehicleId($requestData['vehicle_status']);
             if ($vehicleId !== null) {
@@ -102,7 +168,9 @@ class CarRepository implements CarRepositoryInterface
 
 
         foreach (['search', 'price_range', 'engine_capacity_cc', 'fuel_economy', 'brand_ids', 'body_style_ids',
-        'vehicle_status', 'years_model','transmission_type_ids','kilometers','installment','down_payment_range','car_types_ids'] as $key) {
+        'vehicle_status', 'years_model','transmission_type_ids','kilometers','installment','down_payment_range','car_types_ids',
+        'brand', 'model', 'color', 'year', 'condition', 'price_from', 'price_to', 'km_from', 'km_to', 'mileage_range',
+        'lang', 'down_payment_from', 'down_payment_to', 'down_payment_range', 'transmission', 'location'] as $key) {
             unset($requestData[$key]);
         }
 
@@ -125,7 +193,8 @@ class CarRepository implements CarRepositoryInterface
     public function filterByRange(&$query, $requestData)
     {
         $filters = ['price_range'=>'price', 'down_payment_range'=>'down_payment',
-        'installment'=>'monthly_installment', 'engine_capacity_cc'=>'engine_capacity_cc'];
+        'installment'=>'monthly_installment', 'engine_capacity_cc'=>'engine_capacity_cc', 
+        'mileage_range' => 'mileage', 'down_payment_range'=> 'down_payment'];
         foreach($filters as $req => $db){
             if (!empty($requestData[$req])) {
                 if (!empty($requestData[$req][0]))
@@ -134,6 +203,7 @@ class CarRepository implements CarRepositoryInterface
                     $query->where($db, '<=', $requestData[$req][1]);
             }
         }
+
     }
 
     public function get($carId)
@@ -297,7 +367,7 @@ class CarRepository implements CarRepositoryInterface
 
     public function getVehicleId(string $name): ?int
     {
-        $vehicle = VehicleStatus::where('name', 'like', "%{$name}%")->first();
+        $vehicle = VehicleStatus::where('name->' . $this->locale, 'like', "%{$name}%")->first();
         return $vehicle?->id;
     }
 

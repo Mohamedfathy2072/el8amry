@@ -159,14 +159,16 @@ class AuthController extends Controller
         ]);
 
         $user->phone = $request->input('phone', $user->phone);
-        $user->name_ar = $request->input('name_ar', $user->name_ar);
-        $user->name_en = $request->input('name_en', $user->name_en);
+        $user->name = [
+            'ar' => $request->input('name_ar', $user->name_ar),
+            'en' => $request->input('name_en', $user->name_en)
+        ];
         $user->save();
 
         return response()->json(
             [
                 'message' => __('auth.profile_update'),
-                 'user' => new UserResource($user)
+                'user' => new UserResource($user)
             ]);
     }
 

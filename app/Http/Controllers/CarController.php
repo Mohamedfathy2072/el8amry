@@ -32,7 +32,6 @@ class CarController extends Controller
 
     public function store(CreateCarRequest $request)
     {
-        // dd($request) ;
         $carData = $request->validated();
         
         try {
@@ -64,7 +63,14 @@ class CarController extends Controller
     public function pagination(PaginatedCarsRequest $request, ?string $sort_direction='asc', ?string $sort_by='created_at', ?int $page=-1, ?int $per_page=-1)
     {
         try {
-            $cars = $this->carService->paginateCars($request->validated() + (!empty($request->input('owner_id')) ? ['owner_id' => $request->input('owner_id')] : []), $sort_direction, $sort_by, $page, $per_page);
+            $lang = ['lang' => $request->header('Accept-Language') 
+                 ?: $request->query('lang')
+                 ?: config('app.locale')];
+            $sort_by = !empty($request->sort_by) ? $request->sort_by : $sort_by;
+            $sort_direction = !empty($request->sort_order) ? $request->sort_order : $sort_direction;
+            $page = !empty($request->page) ? $request->page : $page;
+            $per_page = !empty($request->size) ? $request->size : $per_page;
+            $cars = $this->carService->paginateCars($request->validated() + (!empty($request->input('owner_id')) ? ['owner_id' => $request->input('owner_id')] : []) + $lang, $sort_direction, $sort_by, $page, $per_page);
             return response()->json(['message' => 'Cars fetched successfully', 'data' => $cars['data'], 'count' => $cars['count']]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error fetching cars', 'error' => $e->getMessage()], 500);

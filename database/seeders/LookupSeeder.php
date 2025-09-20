@@ -115,8 +115,8 @@ class LookupSeeder extends Seeder
         foreach ($carModelBrandMap as $modelName => [$brandName_en, $brandName_ar, $brandImage]) {
             CarModel::firstOrCreate([
                 'name' => [
-                    'en' => $brandName_en,
-                    'ar' => $brandName_ar
+                    'en' => $modelName,
+                    'ar' => $modelName
                 ],
                 'brand_id' => $brandIds[$brandName_en],
             ]);
