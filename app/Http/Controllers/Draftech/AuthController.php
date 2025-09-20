@@ -89,18 +89,18 @@ class AuthController extends Controller
 
 
     public function completeRegistration(Request $request): \Illuminate\Http\JsonResponse
-    {
+    { 
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'name' => 'required|string|max:255',
-            'email' => 'nullable|email',
+            'email' => 'nullable|email|unique:users,email,{id}',
             'gender' => 'nullable|in:male,female',
             'date_of_birth' => 'nullable|date',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
         $user = User::find($request->user_id);
-
+        
         if (!$user->is_verified) {
             return response()->json(['error' => 'يرجى التحقق من رقم الهاتف أولًا.'], 401);
         }
