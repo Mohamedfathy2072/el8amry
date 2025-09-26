@@ -63,8 +63,7 @@ class CarController extends Controller
     public function pagination(PaginatedCarsRequest $request, ?string $sort_direction='asc', ?string $sort_by='created_at', ?int $page=-1, ?int $per_page=-1)
     {
         try {
-            $lang = ['lang' => $request->header('Accept-Language') 
-                 ?: $request->query('lang')
+            $lang = ['lang' => $request->query('lang')
                  ?: config('app.locale')];
             $sort_by = !empty($request->sort_by) ? $request->sort_by : $sort_by;
             $sort_direction = !empty($request->sort_order) ? $request->sort_order : $sort_direction;
