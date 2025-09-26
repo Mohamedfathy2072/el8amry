@@ -19,7 +19,7 @@ class BrandResource extends JsonResource
             return [
                 'id' => $this->id,
                 'name' => $this->name, 
-                'image' => $this->image ? Storage::url($this->image) : null,
+                'image' => $this->image ? $this->image : null,
             ];
         } else {
             return [
