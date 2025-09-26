@@ -112,7 +112,7 @@
               </ul>
           </li>
 
-          <li class="nav-heading">Pages</li>
+          <li class="nav-heading">Management</li>
 
           <li class="nav-item">
               <a class="nav-link collapsed" href="{{ route('admin.Users') }}">
@@ -128,6 +128,12 @@
                   </a>
               </li><!-- End Admins Page Nav -->
           @endrole
+          <li class="nav-item">
+              <a class="nav-link collapsed" href="profile">
+                  <i class="bi bi-person"></i>
+                  <span>Profile</span>
+              </a>
+          </li>
 
 
       <li class="nav-item">
@@ -140,55 +146,26 @@
         </a>
       </li>
 
-      <li class="nav-heading">Pages</li>
-
+      <li class="nav-heading">Features</li>
+        @if(config('app.app') !== 'kalksat')
           <li class="nav-item">
-              <a class="nav-link collapsed" href="{{ route('admin.dashboard') }}">
-                  <i class="bi bi-person"></i>
-                  <span>Profile</span>
-              </a>
-          </li>
-
-
-          <li class="nav-item">
-
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('admin.Users') }}">
-          <i class="bi bi-person"></i>
-          <span>Users</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('admin.financing-requests.index') }}">
-          <i class="bi bi-person"></i>
-          <span>Financing Requests</span>
-        </a>
-      </li>
-      @role('super-admin')
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="{{ route('admin.Admins') }}">
-          <i class="bi bi-person"></i>
-          <span>Admins</span>
-        </a>
-      </li><!-- End Admins Page Nav -->
-      @endrole
-
-              <a class="nav-link collapsed" href="{{ route('admin.Quizzes') }}">
-                  <i class="bi bi-question"></i>
-                  <span>Quizzes</span>
-              </a>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{{ route('admin.financing-requests.index') }}">
+                <i class="bi bi-person"></i>
+                <span>Financing Requests</span>
+                </a>
+            </li>
+            <a class="nav-link collapsed" href="{{ route('admin.Quizzes') }}">
+                <i class="bi bi-question"></i>
+                <span>Quizzes</span>
+            </a>
           </li><!-- End Quizzes Page Nav -->
-
-
+        @endif
           <li class="nav-item">
-              <a class="nav-link collapsed" href="pages-faq.html">
-
-                  <a class="nav-link collapsed" href="{{ route('admin.dashboard') }}">
-
-                      <i class="bi bi-question-circle"></i>
-                      <span>F.A.Q</span>
-                  </a>
+            <a class="nav-link collapsed" href="{{ route('admin.dashboard') }}">
+                <i class="bi bi-question-circle"></i>
+                <span>F.A.Q</span>
+            </a>
           </li><!-- End F.A.Q Page Nav -->
 
 

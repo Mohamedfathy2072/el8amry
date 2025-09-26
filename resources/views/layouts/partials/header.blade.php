@@ -1,10 +1,14 @@
+  <?php 
+    $appName = config('app.app') === 'kalksat' ? 'klaksatauto' : '';
+    $logo = config('app.app') === 'kalksat' ? 'logo-brand.webp' : 'draftech-logo.svg';
+  ?>
   <!-- ======= Header ======= -->
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="index.html" class="logo d-flex align-items-center">
-        <img src="assets/img/logo.png" alt="">
-        <span class="d-none d-lg-block">NiceAdmin</span>
+      <a href="{{ route('admin.dashboard') }}" class="logo d-flex align-items-center">
+        <img src="{{ asset($logo) }}" alt="{{$appName}}">
+        <span class="d-none d-lg-block">{{$appName}}</span>
       </a>
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
@@ -194,7 +198,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+              <a class="dropdown-item d-flex align-items-center" href="profile">
                 <i class="bi bi-gear"></i>
                 <span>Account Settings</span>
               </a>
@@ -204,7 +208,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
+              <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.dashboard') }}">
                 <i class="bi bi-question-circle"></i>
                 <span>Need Help?</span>
               </a>
