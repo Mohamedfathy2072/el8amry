@@ -16,14 +16,14 @@
 /public/build
 /public/hot
 /public/storage
+/public/assets/
+/node_modules/
 /storage/*.key
 /storage/pail
 /vendor
 Homestead.json
 Homestead.yaml
 Thumbs.db
-/old_server-data
 .htaccess
-/crm
 .editorconfig
 .gitattributes
