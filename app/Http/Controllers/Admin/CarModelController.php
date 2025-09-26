@@ -97,6 +97,6 @@ class CarModelController extends Controller
             'brand_id' => 'required|integer'
         ]);
         $data = CarModel::where('brand_id', $request->input('brand_id'))->get();
-        return response()->json($data, 200);
+        return response()->json(ModelsResource::collection($data), 200);
     }
 }
