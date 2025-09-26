@@ -27,3 +27,4 @@ Thumbs.db
 .htaccess
 .editorconfig
 .gitattributes
+/storage
