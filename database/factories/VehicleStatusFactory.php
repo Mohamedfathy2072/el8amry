@@ -7,18 +7,18 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class VehicleStatusFactory extends Factory
 {
     public static $statuses = [
-        'New',
-        'Used',
+        'new',
+        'used',
         'vip',
         'electric',
-        'Certified Pre-Owned',
-        'Salvage',
-        'Damaged',
-        'For Parts',
-        'Rebuilt',
-        'Refurbished',
-        'Leased',
-        'Export Only'
+        'certified pre-owned',
+        'salvage',
+        'damaged',
+        'for parts',
+        'rebuilt',
+        'refurbished',
+        'leased',
+        'export only'
     ];
 
     public function definition(): array
