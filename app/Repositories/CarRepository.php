@@ -367,14 +367,12 @@ class CarRepository implements CarRepositoryInterface
 
     public function getVehicleId(string $name): ?int
     {
-        \DB::enableQueryLog();
         $jsonPath = '$."' . $this->locale . '"';
 
         $vehicle = VehicleStatus::whereRaw(
             "JSON_UNQUOTE(JSON_EXTRACT(name, '{$jsonPath}')) = ?",
             [$name]
         )->first();
-        dd(\DB::getQueryLog());
         return $vehicle?->id;
     }
 
