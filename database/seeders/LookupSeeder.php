@@ -56,11 +56,15 @@ class LookupSeeder extends Seeder
         }
 
         foreach (TrimFactory::$trims as $item) {
-            Trim::firstOrCreate(['name' => $item]);
+            Trim::firstOrCreate(['name' => [
+                'en' => $item
+            ]]);
         }
 
         foreach (VehicleStatusFactory::$statuses as $item) {
-            VehicleStatus::firstOrCreate(['name' => $item]);
+            VehicleStatus::firstOrCreate([
+                'name' => ['en' => $item]
+            ]);
         }
     }
 
