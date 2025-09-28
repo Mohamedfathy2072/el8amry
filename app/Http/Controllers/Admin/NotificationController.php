@@ -17,7 +17,7 @@ class NotificationController extends Controller
     {
         $this->fcm = $fcm;
     }
-    
+
     /**
      * Show the notification creation form.
      *
@@ -47,14 +47,12 @@ class NotificationController extends Controller
             'topic' => 'required_if:send_type,topic',
             'user_ids' => 'required_if:send_type,users|array',
         ]);
-
         $dataPayload = ['type' => $request->send_type];
-
         try {
+
             if ($request->send_type === 'topic') {
                 // Send to Topic
                 $this->fcm->sendToTopic($request->topic, $request->title, $request->body, $dataPayload);
-
                 Notification::create([
                     'title' => $request->title,
                     'body' => $request->body,
@@ -63,7 +61,6 @@ class NotificationController extends Controller
                     'sent_at' => now(),
                     'user_id' => null
                 ]);
-                dd($notification);
 
             } else {
                 $users = User::whereIn('id', $request->user_ids)->get();
