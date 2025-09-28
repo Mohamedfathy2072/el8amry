@@ -17,7 +17,7 @@ class NotificationController extends Controller
     {
         $this->fcm = $fcm;
     }
-    
+
     /**
      * Show the notification creation form.
      *
@@ -28,7 +28,7 @@ class NotificationController extends Controller
         $users = User::select('id', 'name', 'email')
             ->orderBy('name')
             ->get();
-            
+
         return view('pages.notifications.create', compact('users'));
     }
 
@@ -47,20 +47,22 @@ class NotificationController extends Controller
             'topic' => 'required_if:send_type,topic',
             'user_ids' => 'required_if:send_type,users|array',
         ]);
-
         $dataPayload = ['type' => $request->send_type];
-
         try {
+
             if ($request->send_type === 'topic') {
                 // Send to Topic
                 $this->fcm->sendToTopic($request->topic, $request->title, $request->body, $dataPayload);
-
                 Notification::create([
                     'title' => $request->title,
                     'body' => $request->body,
                     'type' => 'topic',
-                    'sent_at' => now()
+                    'topic'   => $request->topic,
+                    'sent_at' => now(),
+                    'user_id' => null,
+
                 ]);
+
             } else {
                 $users = User::whereIn('id', $request->user_ids)->get();
 
@@ -86,12 +88,12 @@ class NotificationController extends Controller
             return redirect()
                 ->route('admin.notifications.create')
                 ->with('success', 'Notification sent successfully');
-                
+
         } catch (\Exception $e) {
             if ($request->wantsJson()) {
                 return response()->json(['error' => $e->getMessage()], 500);
             }
-            
+
             return back()->with('error', $e->getMessage());
         }
     }

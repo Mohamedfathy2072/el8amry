@@ -40,6 +40,11 @@ class FirebaseNotificationService
             ->withNotification(Notification::create($title, $body))
             ->withData($data);
 
-        $this->messaging->send($message);
+        try {
+            $this->messaging->send($message);
+        } catch (\Throwable $e) {
+            \Log::error("FCM sendToTopic error: ".$e->getMessage());
+        }
     }
+
 }
