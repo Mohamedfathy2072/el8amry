@@ -59,7 +59,8 @@ class NotificationController extends Controller
                     'type' => 'topic',
                     'topic'   => $request->topic,
                     'sent_at' => now(),
-                    'user_id' => null
+                    'user_id' => null,
+
                 ]);
 
             } else {

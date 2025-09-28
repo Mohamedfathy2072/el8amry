@@ -53,14 +53,14 @@ Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/verifyOtp', [AuthController::class, 'verifyOtp']);
     Route::post('/resendOtp', [AuthController::class, 'resendOtp']);
-    
+
     // App-specific login and profile routes
     $isKalksat = config('app.app') === 'kalksat';
     $authController = $isKalksat ? AuthController::class : DraftechAuthController::class;
-    
+
     Route::post('/login', [$authController, 'login']);
     Route::get('/me', [$authController, 'me'])->middleware('auth:api');
-    
+
     // Kalksat-specific auth routes
     if ($isKalksat) {
         Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
@@ -68,7 +68,7 @@ Route::prefix('auth')->group(function () {
         Route::get('/refreshToken', [AuthController::class, 'refershToken'])->middleware('auth:api');
         Route::delete('/deleteAccount', [AuthController::class, 'deleteAccount'])->middleware('auth:api');
     }
-    
+
     // Draftech-specific auth routes
     else {
         Route::post('send-otp', [DraftechAuthController::class, 'sendOtp']);
@@ -79,7 +79,7 @@ Route::prefix('auth')->group(function () {
         Route::delete('delete-account', [DraftechAuthController::class, 'deleteAccount'])->middleware('auth:api');
         Route::post('/update-phone', [DraftechAuthController::class, 'updatephone']);
     }
-    
+
     // Shared auth-protected routes under auth prefix
     Route::post('/favourites/toggle/{carId}', [FavouriteController::class, 'toggleFavourite'])->middleware('auth:api');
     Route::get('/favourites', [FavouriteController::class, 'myFavourites'])->middleware('auth:api');
@@ -113,6 +113,8 @@ Route::prefix('financing-requests')->middleware('auth:api')->group(function () {
  */
 Route::get('notifications/user', [ApiNotificationController::class, 'getForUser'])->middleware('auth:api');
 
+Route::post('notifications/read', [ApiNotificationController::class, 'markAsRead'])
+    ->middleware('auth:api');
 /**
  * ======================================================
  * CARS ROUTES
@@ -123,7 +125,7 @@ Route::prefix('cars')->group(function () {
     Route::get('/', [CarController::class, 'pagination']);
     Route::post('/pagination/{sort_direction?}/{sort_by?}/{page?}/{per_page?}', [CarController::class, 'pagination']);
     Route::get('/{id}', [CarController::class, 'findById']);
-    
+
     // Authenticated car routes
     Route::middleware('auth:api')->group(function () {
         Route::post('/', [CarController::class, 'store']);
@@ -258,7 +260,7 @@ Route::prefix('start-ad')->group(function () {
  * ======================================================
  */
 Route::post('calculate-car-installment', [CalculatorController::class, 'calculateInstallment']);
-Route::post('complete-profile', [DraftechAuthController::class, 'completeRegistration']); 
+Route::post('complete-profile', [DraftechAuthController::class, 'completeRegistration']);
 Route::post('reset-password', [DraftechAuthController::class, 'resetPassword'])->middleware('auth:api');
 Route::get('/contact-us', [ContactUsController::class, 'index']);
 Route::post('/contact-us', [ContactUsController::class, 'store']);
