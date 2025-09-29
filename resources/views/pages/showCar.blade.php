@@ -168,7 +168,7 @@
                             <h2 class="accordion-header" id="headingExtras">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapseExtras">
-                                    Flags, Features & Conditions
+                                    Features
                                 </button>
                             </h2>
                             <div id="collapseExtras" class="accordion-collapse collapse"
@@ -176,6 +176,7 @@
                                 <div class="accordion-body">
                                     <div class="row g-3">
                                         <div class="col-12">
+                                            @if(config('app.app') === 'kalksat')
                                             <strong>Flags:</strong>
                                             <ul>
                                                 @foreach ($car['flags'] as $flag)
@@ -214,7 +215,7 @@
                                                     @endforeach
                                                 @endforeach
                                             </ul>
-
+                                            @endif
 
                                             <strong>Conditions:</strong>
                                             <ul>

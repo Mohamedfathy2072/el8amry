@@ -320,7 +320,7 @@
                             </h2>
                             <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
-
+                                @if(config('app.app') === 'kalksat')
                                     <!-- Flags Section -->
                                     <div class="row g-3">
                                         <div class="col-12">
@@ -395,7 +395,7 @@
                                             </button>
                                         </div>
                                     </div>
-
+                                @endif
 
 
                                     <!-- Conditions Section -->
