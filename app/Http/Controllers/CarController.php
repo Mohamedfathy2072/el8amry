@@ -94,7 +94,7 @@ class CarController extends Controller
     public function findById(int $id)
     {
         try {
-            $car = $this->carService->getCarDetails($id);
+            $car = $this->carService->getCarDetails($id, false);
             return response()->json(['message' => 'Car fetched successfully', 'data' => $car]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error fetching car', 'error' => $e->getMessage()], 500);
@@ -103,7 +103,7 @@ class CarController extends Controller
 
     public function edit(int $id)
     {
-        $car = $this->carService->getCarDetails($id);
+        $car = $this->carService->getCarDetails($id, true);
         $data = $this->getDropDownData() + ['car' => $this->toRecursiveArray($car)];
         // dd($car);
         // dd($data['car']['features']);
@@ -166,7 +166,7 @@ class CarController extends Controller
     public function show(int $id)
     {
         try {
-            $car = $this->carService->getCarDetails($id);
+            $car = $this->carService->getCarDetails($id, true);
             return view('pages.showCar', ['car' => $this->toRecursiveArray($car)]);
         } catch (\Exception $e) {
             return redirect()->back()->with(['message' => 'Error fetching car', 'error' => $e->getMessage()]);

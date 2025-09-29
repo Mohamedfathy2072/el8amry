@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Storage;
 
 class CarResource extends JsonResource
 {
+    protected ?string $flag = null;
+
+    public function flag(string $flag): self
+    {
+        $this->flag = $flag;
+        return $this;
+    }
     /**
      * Transform the resource into an array.
      *
@@ -15,9 +22,13 @@ class CarResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return config('app.app') === 'kalksat'
-            ? $this->getCarKlaksat()
-            : $this->getCarDraftech();
+        if ($this->flag === 'from_dashboard') {
+            return $this->getCarKlaksat();
+        } else {
+            return config('app.app') === 'kalksat'
+                ? $this->getCarKlaksat()
+                : $this->getCarDraftech();
+        }
     }
 
     public function getCarDraftech($withWrapper = false, $pagination = null)

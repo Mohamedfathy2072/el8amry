@@ -207,10 +207,10 @@ class CarRepository implements CarRepositoryInterface
 
     }
 
-    public function get($carId)
+    public function get($carId, $from_dashboard = false)
     {
         $car = Car::findOrFail($carId);
-        return new CarResource($car);
+        return $from_dashboard ? (new CarResource($car))->flag('from_dashboard') : (new CarResource($car));
     }
 
     public function insert(array $carData)
