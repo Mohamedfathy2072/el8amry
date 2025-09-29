@@ -240,10 +240,10 @@ Route::prefix('book')->middleware('auth:api')->group(function () {
  * ======================================================
  */
 Route::prefix('quizzes')->middleware('auth:api')->group(function () {
-    Route::get('/', [QuizController::class, 'index']);
     Route::post('/answers', [QuizAnswerController::class, 'store']);
     Route::get('/match', [QuizMatchController::class, 'match']);
 });
+Route::get('quizzes', [QuizController::class, 'index']);
 
 /**
  * ======================================================

@@ -14,76 +14,88 @@ class CarResource extends JsonResource
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
-    {    
-        return config('app.app') === 'kalksat' 
+    {
+        return config('app.app') === 'kalksat'
             ? $this->getCarKlaksat()
             : $this->getCarDraftech();
     }
 
-    public function getCarDraftech() 
+    public function getCarDraftech($withWrapper = false, $pagination = null)
     {
+
         $user = auth('api')->user();
-        $conditions = !empty($this->resource->conditions) 
+        $conditions = !empty($this->resource->conditions)
             ? $this->resource->conditions->map(fn($condition) => [
-                    'id' => (int) $condition->id,
-                    'name' => $condition->name,
-                    'part_name' => $condition->getTranslation('part','ar'),
-                    'note' => $condition->getTranslation('description','ar'),
-                    'image_url' => !empty($condition->image) ? Storage::url($condition->image) : null,
-                ])->groupBy('name')
+                'id' => (int) $condition->id,
+                'name' => $condition->name,
+                'part_name' => $condition->getTranslation('part','ar'),
+                'note' => $condition->getTranslation('description','ar'),
+                'image_url' => !empty($condition->image) ? Storage::url($condition->image) : null,
+            ])->groupBy('name')
             : [];
-        return [
-                'id' => (int) $this->resource->id,
-                "model" => $this->resource->carModel?->name,
-                "year" => $this->resource->model_year,
-                "color" => $this->resource->color ?? '',
-                "transmission" => $this->resource->transmissionType?->name,
-                "engine_cc" => $this->resource->engine_capacity_cc ?? null,
-                "body_type" => $this->resource->bodyStyle?->name,
-                "km_driven" => $this->resource->mileage,
-                "price" => $this->resource->price,
-                "down_payment" => $this->resource->down_payment ?? null,
-                "license_validity" => $this->resource->license_expire_date ?? null,
-                "location" => $this->resource->location ?? null,
-                "condition" => $this->resource->vehicleStatus?->name,
-                "fcm_token" => $this->resource->fcm_token ?? null,
-                "vehicle_category" => $this->resource->vehicle_category ?? null,
-                "description" => $this->resource->description ?? null,
-                "payment_option" => $this->resource->payment_option ?? null,
-                "created_at" => $this->resource->created_at?->format('Y-m-d H:i:s'),
-                "updated_at" => $this->resource->updated_at?->format('Y-m-d H:i:s'),
-                "brand_id" => (int) $this->resource->brand_id,
-                "brand" => [
-                    "id" => (int) $this->resource->brand_id,
-                    "name" => $this->resource->brand?->name,
-                    "created_at" => $this->resource->brand?->created_at,
-                    "updated_at" => $this->resource->brand?->updated_at,
-                    "image_url" => !empty($this->resource->brand?->image) 
-                        ? Storage::url($this->resource->brand?->image) : ''
-                ],
-                "is_fav" => $user ? ($user->favouriteCars()->where('car_id', $this->resource->id)->exists() ? true : false) : false,
-                "image_url" => null,
-                "images" => !empty($this->resource->images) ? $this->resource->images->map(fn($img)=>[
-                    'id' => (int) $img->id,
-                    'image_url' => Storage::url($img->location)
-                ]) : [],
-                "exterior_conditions" => !empty($conditions) ? 
-                    !empty($conditions['exterior_condition']) 
-                    ? $conditions['exterior_condition'] : []    
-                : [],
-                "interior_conditions" => !empty($conditions) ? 
-                    !empty($conditions['interior_condition']) 
-                    ? $conditions['interior_condition'] : []    
-                : [],
-                "mechanical_conditions" => !empty($conditions) ? 
-                    !empty($conditions['mechanical_condition']) 
-                    ? $conditions['mechanical_condition'] : []    
-                : [],
-                "pivot" => $user ? [
-                    "user_id" => $user->id,
-                    "car_id" => (int) $this->resource->id
-                ] : []
+
+        $carData = [
+            'id' => (int) $this->resource->id,
+            "model" => $this->resource->carModel?->name,
+            "year" => $this->resource->model_year,
+            "color" => $this->resource->color ?? '',
+            "transmission" => $this->resource->transmissionType?->name,
+            "engine_cc" => $this->resource->engine_capacity_cc ?? null,
+            "body_type" => $this->resource->bodyStyle?->name,
+            "km_driven" => $this->resource->mileage,
+            "price" => $this->resource->price,
+            "down_payment" => $this->resource->down_payment ?? null,
+            "license_validity" => $this->resource->license_expire_date ?? null,
+            "location" => $this->resource->location ?? null,
+            "condition" => $this->resource->vehicleStatus?->name,
+            "fcm_token" => $this->resource->fcm_token ?? null,
+            "vehicle_category" => $this->resource->vehicle_category ?? null,
+            "description" => $this->resource->description ?? null,
+            "payment_option" => $this->resource->payment_option ?? null,
+            "created_at" => $this->resource->created_at?->format('Y-m-d H:i:s'),
+            "updated_at" => $this->resource->updated_at?->format('Y-m-d H:i:s'),
+            "brand_id" => (int) $this->resource->brand_id,
+            "brand" => [
+                "id" => (int) $this->resource->brand_id,
+                "name" => $this->resource->brand?->name,
+                "created_at" => $this->resource->brand?->created_at,
+                "updated_at" => $this->resource->brand?->updated_at,
+                "image_url" => !empty($this->resource->brand?->image)
+                    ? Storage::url($this->resource->brand?->image) : null
+            ],
+            "is_fav" => $user ? $user->favouriteCars()->where('car_id', $this->resource->id)->exists() : false,
+            "image_url" => null,
+            "images" => !empty($this->resource->images) ? $this->resource->images->map(fn($img)=>[
+                'id' => (int) $img->id,
+                'image_url' => Storage::url($img->location)
+            ]) : [],
+            "exterior_conditions" => $conditions['exterior_condition'] ?? [],
+            "interior_conditions" => $conditions['interior_condition'] ?? [],
+            "mechanical_conditions" => $conditions['mechanical_condition'] ?? [],
+            "pivot" => $user ? [
+                "user_id" => $user->id,
+                "car_id" => (int) $this->resource->id
+            ] : []
         ];
+
+        // 👇 هنا لو عايز تلف الريسبونس كامل
+        if ($withWrapper) {
+            return [
+                "status" => true,
+                "message" => "Cars fetched successfully.",
+                "data" => [
+                    "items" => [$carData], // هنا بتحط العربية جوه items
+                    "pagination" => $pagination ?? [
+                            "current_page" => 1,
+                            "per_page" => 1,
+                            "total" => 1,
+                            "last_page" => 1,
+                        ]
+                ]
+            ];
+        }
+
+        return $carData;
     }
 
     public function getCarKlaksat()
