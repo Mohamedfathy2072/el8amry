@@ -9,7 +9,6 @@ class CarCollection extends ResourceCollection
 {
     public function toArray($request)
     {
-        // لو Kalksat
         if (config('app.app') === 'kalksat') {
             return [
                 'message' => 'Cars fetched successfully',
@@ -18,7 +17,6 @@ class CarCollection extends ResourceCollection
             ];
         }
 
-        // لو Draftech
         $data = [
             'status' => true,
             'message' => 'Cars fetched successfully.',

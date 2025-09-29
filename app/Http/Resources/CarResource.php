@@ -78,7 +78,6 @@ class CarResource extends JsonResource
             ] : []
         ];
 
-        // 👇 هنا لو عايز تلف الريسبونس كامل
         if ($withWrapper) {
             return [
                 "status" => true,

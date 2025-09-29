@@ -80,7 +80,6 @@ class CarController extends Controller
                 $per_page
             );
 
-            // ✅ دلوقتي هتمرر الـ paginator مباشرة
             return new CarCollection($cars['data']);
 
         } catch (\Exception $e) {
@@ -192,16 +191,27 @@ class CarController extends Controller
         return view('pages.cars', ['cars' => $carResources]);
     }
 
-    public function toRecursiveArray(CarResource $car)
+    public function toRecursiveArray(CarResource $car): array
     {
         $carArray = $car->toArray(request());
-        $carArray['flags'] = $carArray['flags']->toArray(request());
-        $carArray['features'] = $carArray['features'];
-        $carArray['conditions'] = $carArray['conditions']->toArray(request());
-        $carArray['images'] = $carArray['images']->toArray(request());
+
+        $carArray['flags'] = isset($carArray['flags'])
+            ? $carArray['flags']->toArray(request())
+            : [];
+
+        $carArray['features'] = $carArray['features'] ?? [];
+
+        $carArray['conditions'] = isset($carArray['conditions'])
+            ? $carArray['conditions']->toArray(request())
+            : [];
+
+        $carArray['images'] = isset($carArray['images'])
+            ? $carArray['images']->toArray(request())
+            : [];
 
         return $carArray;
     }
+
 
     public function myCars(PaginatedCarsRequest $request, ?string $sort_direction='asc', ?string $sort_by='created_at', ?int $page=-1, ?int $per_page=-1)
     {
