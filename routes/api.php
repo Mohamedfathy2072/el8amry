@@ -212,6 +212,7 @@ Route::prefix('partners')->group(function () {
 });
 
 Route::prefix('videos')->group(function () {
+    Route::post('/', [VideoController::class, 'store']);
     Route::get('/', [VideoController::class, 'index']);
     Route::get('/{id}', [VideoController::class, 'show']);
 });
