@@ -209,8 +209,47 @@ class CarController extends Controller
             ? $carArray['images']->toArray(request())
             : [];
 
+        // 🔹 جهّز المفاتيح الأساسية عشان ماتوقعش في null
+        $carArray['specifications'] = $carArray['specifications'] ?? [];
+
+        $carArray['specifications']['body_style'] = $carArray['specifications']['body_style'] ?? [
+            'id' => null,
+            'name' => null,
+        ];
+
+        $carArray['specifications']['type'] = $carArray['specifications']['type'] ?? [
+            'id' => null,
+            'name' => null,
+        ];
+
+        $carArray['specifications']['transmission_type'] = $carArray['specifications']['transmission_type'] ?? [
+            'id' => null,
+            'name' => null,
+        ];
+
+        $carArray['specifications']['drive_type'] = $carArray['specifications']['drive_type'] ?? [
+            'id' => null,
+            'name' => null,
+        ];
+
+        $carArray['specifications']['engine_type'] = $carArray['specifications']['engine_type'] ?? [
+            'id' => null,
+            'name' => null,
+        ];
+
+        $carArray['specifications']['vehicle_status'] = $carArray['specifications']['vehicle_status'] ?? [
+            'id' => null,
+            'name' => null,
+        ];
+
+        $carArray['specifications']['trim'] = $carArray['specifications']['trim'] ?? [
+            'id' => null,
+            'name' => null,
+        ];
+
         return $carArray;
     }
+
 
 
     public function myCars(PaginatedCarsRequest $request, ?string $sort_direction='asc', ?string $sort_by='created_at', ?int $page=-1, ?int $per_page=-1)
