@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Draftech;
 
-use App\Models\Newsletter\Draftech;
+use App\Models\Newsletter;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
