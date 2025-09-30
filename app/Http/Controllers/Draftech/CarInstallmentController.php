@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Draftech;
 
-use App\Helpers\CarInstallmentCalculator;
+use App\Helpers\CarInstallmentCalculator2;
 use Illuminate\Http\Request;
 
 class CarInstallmentController extends BaseController
