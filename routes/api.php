@@ -40,7 +40,8 @@ use App\Http\Controllers\Draftech\{
     AreaController,
     UniversityController,
     FacultyController,
-    HelpRequestController
+    HelpRequestController,
+    CarInstallmentController 
 };
 
 /**
@@ -259,7 +260,7 @@ Route::prefix('start-ad')->group(function () {
  * DRAFTECH-SPECIFIC ROUTES
  * ======================================================
  */
-Route::post('calculate-car-installment', [CalculatorController::class, 'calculateInstallment']);
+Route::post('calculate-car-installment', [CarInstallmentController::class, 'calculateInstallment']);
 Route::post('complete-profile', [DraftechAuthController::class, 'completeRegistration']);
 Route::post('reset-password', [DraftechAuthController::class, 'resetPassword'])->middleware('auth:api');
 Route::get('/contact-us', [ContactUsController::class, 'index']);
