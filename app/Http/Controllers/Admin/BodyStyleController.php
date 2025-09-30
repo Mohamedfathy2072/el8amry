@@ -58,7 +58,7 @@ class BodyStyleController extends Controller
         }
 
         $bodyStyle = BodyStyle::findOrFail($id);
-        
+
         $data = [
             'name' => [
                 'ar' => $request->input('name_ar'),
@@ -82,10 +82,15 @@ class BodyStyleController extends Controller
     public function destroy($id)
     {
         $brand = BodyStyle::findOrFail($id);
-        Storage::disk('public')->delete($brand->image);
+
+        if (!empty($brand->image)) {
+            Storage::disk('public')->delete($brand->image);
+        }
+
         $brand->delete();
 
-        return redirect()->route('admin.BodyStyles')->with('success', 'Body Style deleted successfully.');
+        return redirect()->route('admin.BodyStyles')
+            ->with('success', 'Body Style deleted successfully.');
     }
 
     /**
