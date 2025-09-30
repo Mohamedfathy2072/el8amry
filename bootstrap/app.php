@@ -15,10 +15,10 @@ use Illuminate\Foundation\Configuration\Middleware;
         )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+            'auth' => \App\Http\Middleware\Authenticate::class,
             'role' => \App\Http\Middleware\CheckRole::class,
         ]);
-        
+
         $middleware->appendToGroup('api',SetLocale::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
