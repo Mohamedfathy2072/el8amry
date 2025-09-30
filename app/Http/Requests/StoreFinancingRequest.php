@@ -54,6 +54,8 @@ class StoreFinancingRequest extends FormRequest
             'medical_insurance_card' => 'nullable|image',
             'owned_car_license_front' => 'nullable|image',
             'owned_car_license_back' => 'nullable|image',
+            'reference_phone_number' => 'nullable',
+            'person_relation' => 'nullable',
 
         ];
     }
