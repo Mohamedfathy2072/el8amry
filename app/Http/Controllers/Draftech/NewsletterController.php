@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Draftech;
 use App\Models\Newsletter;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use App\Http\Controllers\Controller; 
 
 class NewsletterController extends Controller
 {
