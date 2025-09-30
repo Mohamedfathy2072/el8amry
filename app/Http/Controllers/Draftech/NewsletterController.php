@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Newsletter;
+use App\Models\Newsletter\Draftech;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -27,7 +27,7 @@ class NewsletterController extends Controller
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => $e->getMessage(),
-            ], 422); // هنا بنرجع 422 - unprocessable entity لو حصل خطأ فالـ validation
+            ], 422); 
         }
     }
 }
