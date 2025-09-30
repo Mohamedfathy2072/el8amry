@@ -41,7 +41,7 @@ class VideoController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'video' => 'required|mimes:mp4,mov,avi,wmv|max:2048000000',
+            'video' => 'required|mimes:mp4,mov,avi,wmv|max:4194304',
         ]);
 
         $videoPath = $request->file('video')->store('videos', 'public');
