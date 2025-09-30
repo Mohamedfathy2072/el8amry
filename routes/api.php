@@ -40,7 +40,9 @@ use App\Http\Controllers\Draftech\{
     AreaController,
     UniversityController,
     FacultyController,
-    HelpRequestController
+    HelpRequestController,
+    CarInstallmentController,
+    NewsletterController
 };
 
 /**
@@ -240,10 +242,10 @@ Route::prefix('book')->middleware('auth:api')->group(function () {
  * ======================================================
  */
 Route::prefix('quizzes')->middleware('auth:api')->group(function () {
-    Route::get('/', [QuizController::class, 'index']);
     Route::post('/answers', [QuizAnswerController::class, 'store']);
     Route::get('/match', [QuizMatchController::class, 'match']);
 });
+Route::get('quizzes', [QuizController::class, 'index']);
 
 /**
  * ======================================================
@@ -259,11 +261,12 @@ Route::prefix('start-ad')->group(function () {
  * DRAFTECH-SPECIFIC ROUTES
  * ======================================================
  */
-Route::post('calculate-car-installment', [CalculatorController::class, 'calculateInstallment']);
+Route::post('calculate-car-installment', [CarInstallmentController::class, 'calculateInstallment']);
 Route::post('complete-profile', [DraftechAuthController::class, 'completeRegistration']);
 Route::post('reset-password', [DraftechAuthController::class, 'resetPassword'])->middleware('auth:api');
 Route::get('/contact-us', [ContactUsController::class, 'index']);
 Route::post('/contact-us', [ContactUsController::class, 'store']);
+Route::post('/newsletter', [NewsletterController::class, 'store']);
 Route::get('/governorates', [GovernorateController::class, 'index']);
 Route::get('/areas', [AreaController::class, 'index']);
 Route::get('universities', [UniversityController::class, 'universitiesOnly']);

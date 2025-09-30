@@ -19,10 +19,10 @@ class FinancingRequestController extends Controller
             ->where('status', 'In process')
             ->count();
 
-        if ($inProcessCount >= 3) {
+        if ($inProcessCount >= 1) {
             return response()->json([
                 'can_apply' => false,
-                'message' => 'You cannot apply for financing more than 3 times while in process.'
+                'message' => 'You cannot apply for financing more than 1 times while in process.'
             ], 200);
         }
 

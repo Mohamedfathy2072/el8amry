@@ -424,7 +424,7 @@
                                 <div id="collapseSeven" class="accordion-collapse collapse"
                                     aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
-
+                                    @if(config('app.app') === 'kalksat')
                                         <!-- Flags Section -->
                                         <div class="row g-3">
                                             <div class="col-12">
@@ -491,7 +491,6 @@
 
                                         {{-- Features --}}
                                         @php $featureIndex = 0; @endphp
-                                        {{-- @dd($car['features']) --}}
                                         <div id="featureBlockContainer">
                                             @foreach ($car['features'] as $type => $featuresList)
                                                 @foreach ($featuresList as $item)
@@ -554,7 +553,7 @@
                                         <button type="button" class="btn btn-link mt-2" onclick="addFeatureBlock()">
                                             <i class="bi bi-plus-circle"></i> Add More
                                         </button>
-                                        {{-- @dd($car) --}}
+                                    @endif
                                         {{-- Conditions --}}
                                         <div class="row g-3 mt-4">
                                             <div class="col-12">

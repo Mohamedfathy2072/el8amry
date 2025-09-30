@@ -35,10 +35,10 @@ class CarService
     }
 
     // This class will handle car-related services
-    public function getCarDetails($carId)
+    public function getCarDetails($carId, $from_dashboard = false)
     {
         try {
-            return $this->carRepository->get($carId);
+            return $this->carRepository->get($carId, $from_dashboard);
         } catch (ModelNotFoundException $e) {
             \Log::error('Car not found: ' . $e->getMessage());
             throw new \Exception('Car not found.');

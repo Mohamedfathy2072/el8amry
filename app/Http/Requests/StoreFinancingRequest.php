@@ -34,7 +34,7 @@ class StoreFinancingRequest extends FormRequest
             'card_back' => 'required|image',
             'university_name' => 'required_if:applicant_type,student',
             'faculty_id' => 'required_if:applicant_type,student|exists:faculties,id',
-            'applicant_type' => 'required|in:student,employee',
+            'applicant_type' => 'required|in:self-employed,employee,unemployed',
             'brand_id' => 'required', 'exists:brands,id',
             'installment_plan' => 'required|in:12,36,60', // سنة أو 3 أو 5
 
@@ -54,6 +54,8 @@ class StoreFinancingRequest extends FormRequest
             'medical_insurance_card' => 'nullable|image',
             'owned_car_license_front' => 'nullable|image',
             'owned_car_license_back' => 'nullable|image',
+            'reference_phone_number' => 'nullable',
+            'person_relation' => 'nullable',
 
         ];
     }

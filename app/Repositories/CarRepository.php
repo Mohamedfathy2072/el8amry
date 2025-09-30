@@ -17,8 +17,8 @@ use App\Models\Size;
 use App\Models\VehicleStatus;
 use App\Models\TransmissionType;
 use App\Enums\RefurbishmentStatus;
-use App\Enums\Feature as FeatureEnum; 
-use App\Enums\Condition as ConditionEnum; 
+use App\Enums\Feature as FeatureEnum;
+use App\Enums\Condition as ConditionEnum;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -130,7 +130,7 @@ class CarRepository implements CarRepositoryInterface
             }
             if (empty($model)) return ['data' => [], 'count' => 0];
         }
-          
+
         if (!empty($requestData['brand_ids'])) {
             $query->whereIn('brand_id', $requestData['brand_ids']);
         }
@@ -145,7 +145,7 @@ class CarRepository implements CarRepositoryInterface
             $query->where('location', 'like', "%{$location}%");
         }
 
-        
+
         if(!empty($requestData['year'])){
             $requestData['model_year'] = $requestData['year'];
         }
@@ -182,18 +182,19 @@ class CarRepository implements CarRepositoryInterface
 
         if($page === -1 || $per_page === -1){
             $cars = $query->orderBy($sort_by, $sort_direction)->get();
-            return ['data' => CarResource::collection($cars), 'count' => $count];
+            return ['data' => $cars, 'count' => $count];
         }
+
         $cars = $query->orderBy($sort_by, $sort_direction)
             ->paginate($per_page, ['*'], 'page', $page);
 
-        return ['data' => CarResource::collection($cars), 'count' => $count];
+        return ['data' => $cars, 'count' => $count];
     }
 
     public function filterByRange(&$query, $requestData)
     {
         $filters = ['price_range'=>'price', 'down_payment_range'=>'down_payment',
-        'installment'=>'monthly_installment', 'engine_capacity_cc'=>'engine_capacity_cc', 
+        'installment'=>'monthly_installment', 'engine_capacity_cc'=>'engine_capacity_cc',
         'mileage_range' => 'mileage', 'down_payment_range'=> 'down_payment'];
         foreach($filters as $req => $db){
             if (!empty($requestData[$req])) {
@@ -206,10 +207,10 @@ class CarRepository implements CarRepositoryInterface
 
     }
 
-    public function get($carId)
+    public function get($carId, $from_dashboard = false)
     {
         $car = Car::findOrFail($carId);
-        return new CarResource($car);
+        return $from_dashboard ? (new CarResource($car))->flag('from_dashboard') : (new CarResource($car));
     }
 
     public function insert(array $carData)
@@ -274,7 +275,7 @@ class CarRepository implements CarRepositoryInterface
         if (!empty($carData['features'])) {
             foreach ($carData['features'] as $feature) {
                 if (empty($feature['name'])) continue;
-                
+
                 $newCar->features()->create([
                     'name' => $feature['name'],
                     'label' => [
@@ -476,8 +477,8 @@ class CarRepository implements CarRepositoryInterface
                 }
 
                 // Find existing flag or create new one
-                $flagModel = isset($flagInput['id']) 
-                    ? $car->flags()->find($flagInput['id']) 
+                $flagModel = isset($flagInput['id'])
+                    ? $car->flags()->find($flagInput['id'])
                     : new Flag(['car_id' => $car->id]);
 
                 if (!$flagModel) {
@@ -538,8 +539,8 @@ class CarRepository implements CarRepositoryInterface
             $feature = !empty($input['id'])
                 ? Feature::where('car_id', $car->id)->where('id', $input['id'])->first()
                 : new Feature(['car_id' => $car->id]) ;
-                
-           
+
+
 
             if (!$feature) continue;
             $nameAr = FeatureEnum::from($input['name'])->label('ar');
@@ -560,7 +561,7 @@ class CarRepository implements CarRepositoryInterface
         foreach ($submittedConditions as $type => $items) {
             foreach ($items as $item) {
                 if (empty($item['name'])) continue;
-                
+
                 $item['type'] = $type;
                 $flat[] = $item;
             }
@@ -613,7 +614,7 @@ class CarRepository implements CarRepositoryInterface
                         'en'=> $item['part_en'],
                         'ar'=> $item['part_ar'],
                     ],
-                    'description' => 
+                    'description' =>
                     [
                         'en'=>$item['description_en'] ?? '',
                         'ar'=>$item['description_ar'] ?? ''

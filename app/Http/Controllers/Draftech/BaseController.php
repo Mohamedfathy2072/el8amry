@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Draftech;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class BaseController extends Controller
 {
-    protected function successResponse($items, $message = "Data fetched successfully.")
+    protected function successResponse($items, $message = "Data fetched successfully."): \Illuminate\Http\JsonResponse
     {
         return response()->json([
             'status' => true,

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Draftech;
 
 use App\Helpers\CarInstallmentCalculator;
 use App\Http\Controllers\Controller;
