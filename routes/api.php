@@ -41,7 +41,8 @@ use App\Http\Controllers\Draftech\{
     UniversityController,
     FacultyController,
     HelpRequestController,
-    CarInstallmentController 
+    CarInstallmentController,
+    NewsletterController
 };
 
 /**
@@ -265,6 +266,7 @@ Route::post('complete-profile', [DraftechAuthController::class, 'completeRegistr
 Route::post('reset-password', [DraftechAuthController::class, 'resetPassword'])->middleware('auth:api');
 Route::get('/contact-us', [ContactUsController::class, 'index']);
 Route::post('/contact-us', [ContactUsController::class, 'store']);
+Route::post('/newsletter', [NewsletterController::class, 'store']);
 Route::get('/governorates', [GovernorateController::class, 'index']);
 Route::get('/areas', [AreaController::class, 'index']);
 Route::get('universities', [UniversityController::class, 'universitiesOnly']);
