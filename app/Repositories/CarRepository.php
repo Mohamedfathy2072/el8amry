@@ -215,7 +215,6 @@ class CarRepository implements CarRepositoryInterface
 
     public function insert(array $carData)
     {
-
         // length, width, height => insert in table sizes
         // min max fuel economy => insert in table fuel_economies
         // min max horsepower insert in table horsepower
@@ -251,6 +250,7 @@ class CarRepository implements CarRepositoryInterface
                 'en' => $carData['color_en'],
                 'ar' => $carData['color_ar']
             ] : [],
+            'location'              => isset($carData['location']) ? $carData['location'] : '',
             'engine_type_id'        => !empty($carData['engine_type']) ? (int) $carData['engine_type'] : null,
             'engine_capacity_cc'    => !empty($carData['engine_capacity']) ? (int) $carData['engine_capacity'] : null,
             'mileage'               => !empty($carData['mileage']) ? (int) $carData['mileage'] : null,
@@ -269,7 +269,6 @@ class CarRepository implements CarRepositoryInterface
             'trim_id'               => !empty($carData['trim']) ? (int) $carData['trim'] : null,
             'owner_id'              => auth()->user() instanceof Admin ? 1 : auth()->user()->id
         ];
-
         $newCar = Car::create($carDetails);
         // Handle features
         if (!empty($carData['features'])) {
@@ -290,36 +289,41 @@ class CarRepository implements CarRepositoryInterface
             }
         }
 
-        // make new flags, conditions for the car
-        foreach ($carData['flags'] as $flag) {
-            if (empty($flag) || empty(($flag['name_ar'] || $flag['name_en']))) continue;
-            $path = null;
-            if (!empty($flag['image']))
-                $path = $flag['image']->store('flags', 'public');
-            $newCar->flags()->create([
-                'car_id' => $newCar->id,
-                'value' => [
-                    'ar' => $flag['name_ar'],
-                    'en' => $flag['name_en']
-                ],
-                'image' => $path
-            ]);
+        // Handle flags
+        if (!empty($carData['flags'])) {
+            // make new flags, conditions for the car
+            foreach ($carData['flags'] as $flag) {
+                if (empty($flag) || empty(($flag['name_ar'] || $flag['name_en']))) continue;
+                $path = null;
+                if (!empty($flag['image']))
+                    $path = $flag['image']->store('flags', 'public');
+                $newCar->flags()->create([
+                    'car_id' => $newCar->id,
+                    'value' => [
+                        'ar' => $flag['name_ar'],
+                        'en' => $flag['name_en']
+                    ],
+                    'image' => $path
+                ]);
+            }
         }
-
-        foreach ($carData['conditions'] as $cond) {
-            if (empty($cond) || empty($cond['name'])) continue;
-            $path = null;
-            if (!empty($cond['image']))
-                $path = $cond['image']->store('conditions', 'public');
-            $newCar->conditions()->create([
-                'car_id' => $newCar->id,
-                'name' => $cond['name'],
-                'part' => $cond['part'] ?? '',
-                'description' => $cond['description'] ?? '',
-                'image' => $path
-            ]);
+        
+        // Handle conditions
+        if (!empty($carData['conditions'])) {
+            foreach ($carData['conditions'] as $cond) {
+                if (empty($cond) || empty($cond['name'])) continue;
+                $path = null;
+                if (!empty($cond['image']))
+                    $path = $cond['image']->store('conditions', 'public');
+                $newCar->conditions()->create([
+                    'car_id' => $newCar->id,
+                    'name' => $cond['name'],
+                    'part' => $cond['part'] ?? '',
+                    'description' => $cond['description'] ?? '',
+                    'image' => $path
+                ]);
+            }
         }
-
         // if has images save images and save its location
         if (!empty($carData['images']) && is_array($carData['images'])) {
             foreach ($carData['images'] as $img) {
@@ -334,7 +338,7 @@ class CarRepository implements CarRepositoryInterface
                 ]);
             }
         }
-        return new CarResource($newCar);
+        return (new CarResource($newCar))->flag('from_dashboard');
     }
 
     public function update($carId, $carData)

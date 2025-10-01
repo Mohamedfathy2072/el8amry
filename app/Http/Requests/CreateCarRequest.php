@@ -30,6 +30,7 @@ class CreateCarRequest extends FormRequest
             'brand' => 'required',
             'model' => 'required',
             'model_year' => 'required|numeric|min:1900|max:' . (date('Y') + 1),
+            'location' => 'nullable|string|max:255',
             // Vehicle specifications
             'body_style' => 'nullable',
             'type' => 'nullable',

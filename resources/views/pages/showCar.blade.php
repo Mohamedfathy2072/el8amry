@@ -42,6 +42,8 @@
                                             {{ $car['license_valid_until'] }}</div>
                                         <div class="col-md-4"><strong>Color:</strong> {{ $car['appearance']['color'] }}
                                         </div>
+                                        <div class="col-md-4"><strong>Location:</strong> {{ $car['appearance']['location'] }}
+                                        </div>
                                         <div class="col-md-4"><strong>Size:</strong>
                                             {{ $car['appearance']['size']['formate'] ?? 'N/A' }}</div>
                                     </div>
@@ -219,13 +221,9 @@
 
                                             <strong>Conditions:</strong>
                                             <ul>
+                                                @if(!empty($car['conditions']))
                                                 @foreach ($car['conditions'] as $name => $condtion)
-                                                {{-- @dd($car['conditions'] , $condtion , $name) --}}
                                                     <li>
-                                                        <strong>
-                                                            {{ \App\Enums\Condition::tryFrom($name)?->label() ?? ucfirst(str_replace('_', ' ', $name)) }} 
-                                                            {{-- {{ \App\Enums\Condition::tryFrom($name)?->label() ?? ucfirst(str_replace('_', ' ', $condition['name_ar'])) }} --}}
-                                                        </strong>
                                                         <ul>
                                                         @foreach ($condtion as $cond )
                                              
@@ -245,6 +243,7 @@
                                                    
                                                     </li>
                                                 @endforeach
+                                                @endif
                                             </ul>
 
                                         </div>

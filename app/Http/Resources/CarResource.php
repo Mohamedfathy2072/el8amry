@@ -44,7 +44,6 @@ class CarResource extends JsonResource
                 'image_url' => !empty($condition->image) ? Storage::url($condition->image) : null,
             ])->groupBy('name')
             : [];
-
         $carData = [
             'id' => (int) $this->resource->id,
             "model" => $this->resource->carModel?->name,
@@ -154,6 +153,7 @@ class CarResource extends JsonResource
                 'color' => $this->resource->color ?? '',
                 'color_en' => $this->resource->getTranslation('color', 'en'),
                 'color_ar' => $this->resource->getTranslation('color', 'ar'),
+                'location' => $this->resource->location ?? '',
                 'size' => $this->resource->size ? [
                     'id' => (int) $this->resource->size->id,
                     'length' => $this->resource->size->length,

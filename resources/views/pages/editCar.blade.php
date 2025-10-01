@@ -163,6 +163,13 @@
                                                     name="color_en" title="Choose your color en"
                                                     value="{{ old('appearance', $car['appearance']['color_en'] ?? '') }}">
                                             </div>
+
+                                            <div class="col-md-4">
+                                                <label for="inputLocation" class="form-label">Location</label>
+                                                <input type="text" class="form-control" id="exampleLocationInput"
+                                                    name="location" title="Enter your location"
+                                                    value="{{ old('appearance', $car['appearance']['location'] ?? '') }}">
+                                            </div>
                                         </div>
 
                                         <div class="row g-3">

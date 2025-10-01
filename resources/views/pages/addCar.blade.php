@@ -135,6 +135,10 @@
                                             <label for="inputColorEN" class="form-label">Color (EN)</label>
                                             <input type="text" class="form-control" id="exampleColorInputEN" name="color_en" title="Choose your color en">
                                         </div>
+                                        <div class="col-md-4">
+                                            <label for="inputLocation" class="form-label">Location</label>
+                                            <input type="text" class="form-control" id="inputLocation" name="location" title="Enter your location">
+                                        </div>
                                     </div>
 
                                     <div class="row g-3">
