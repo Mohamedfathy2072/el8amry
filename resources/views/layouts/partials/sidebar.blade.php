@@ -109,6 +109,11 @@
                           <i class="bi bi-circle"></i><span>Ads</span>
                       </a>
                   </li>
+                  <li>
+                      <a href="{{ route('admin.Videos') }}">
+                          <i class="bi bi-circle"></i><span>Videos</span>
+                      </a>
+                  </li>
               </ul>
           </li>
 
