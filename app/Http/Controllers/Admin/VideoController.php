@@ -21,7 +21,7 @@ class VideoController extends Controller
                         'id' => $video->id,
                         'title' => $video->title,
                         'description' => $video->description,
-                        'video_url' => $video->link,
+                        'video_url' => $video->video,
                         'created_at' => $video->created_at,
                         'updated_at' => $video->updated_at,
                     ]
@@ -64,9 +64,9 @@ class VideoController extends Controller
         ]);
 
         return redirect()->route('admin.Videos')->with('success', 'Video created successfully.');
-        
+
     }
-    
+
     public function edit(Request $request, $id)
     {
         $validate = Validator::make($request->all(), [
