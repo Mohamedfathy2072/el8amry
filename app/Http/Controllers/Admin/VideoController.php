@@ -42,13 +42,13 @@ class VideoController extends Controller
 
     public function store(Request $request)
     {
-        try {
         $validate = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
 
             'video' => 'required|video|mimes:mp4,mov,avi,wmv'
         ]);
+        dd($validate->fails(), $validate->errors());
         if ($validate->fails()) {
             return redirect()->back()->withErrors($validate)->withInput();
         }
@@ -64,9 +64,7 @@ class VideoController extends Controller
         ]);
 
         return redirect()->route('admin.Videos')->with('success', 'Video created successfully.');
-        } catch (\Exception $e) {
-            dd($e);
-        }
+        
     }
     
     public function edit(Request $request, $id)
