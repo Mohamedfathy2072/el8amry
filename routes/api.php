@@ -264,7 +264,7 @@ Route::prefix('start-ad')->group(function () {
  */
 Route::post('calculate-car-installment', [CarInstallmentController::class, 'calculateInstallment']);
 Route::post('complete-profile', [DraftechAuthController::class, 'completeRegistration']);
-Route::post('reset-password', [DraftechAuthController::class, 'resetPassword'])->middleware('auth:api');
+Route::post('reset-password', [DraftechAuthController::class, 'resetPassword']);
 Route::get('/contact-us', [ContactUsController::class, 'index']);
 Route::post('/contact-us', [ContactUsController::class, 'store']);
 Route::post('/newsletter', [NewsletterController::class, 'store']);
