@@ -16,7 +16,8 @@ use App\Http\Controllers\Admin\{
     AdminController,
     RolePermissionController,
     QuizController,
-    VideoController
+    VideoController,
+    PartnerController
 };
 
 
@@ -164,6 +165,13 @@ Route::middleware(['auth:admin'])->group(function () {
             Route::post('/', [VideoController::class, 'store'])->name('admin.Video.store');
             Route::put('/{id}', [VideoController::class, 'edit'])->name('admin.Video.edit');
             Route::delete('/{id}', [VideoController::class, 'destroy'])->name('admin.Video.destroy');
+        });
+
+        Route::prefix( 'Partners')->group(function () {
+            Route::get('/', [PartnerController::class, 'index'])->name('admin.Partners');
+            Route::post('/', [PartnerController::class, 'store'])->name('admin.Partner.store');
+            Route::put('/{id}', [PartnerController::class, 'edit'])->name('admin.Partner.edit');
+            Route::delete('/{id}', [PartnerController::class, 'destroy'])->name('admin.Partner.destroy');
         });
 
         Route::prefix( 'Banners')->group(function () {
