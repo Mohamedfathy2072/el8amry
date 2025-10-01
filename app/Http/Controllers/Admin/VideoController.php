@@ -72,7 +72,7 @@ class VideoController extends Controller
         $validate = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'video' => 'required|video|mimes:mp4,mov,avi,wmv'
+            'video' => 'nullable|video|mimes:mp4,mov,avi,wmv'
         ]);
 
         if ($validate->fails()) {
@@ -82,8 +82,7 @@ class VideoController extends Controller
         $video = Video::findOrFail($id);
         $data = [
             'title' => $request->input('title'),
-            'description' => $request->input('description'),
-            'video' => $request->file('video')->store('videos', 'public')
+            'description' => $request->input('description')
         ];
 
         if ($request->hasFile('video')) {
