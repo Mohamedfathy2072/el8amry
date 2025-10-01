@@ -12,6 +12,7 @@ class VideoController extends Controller
 {
     public function index()
     {
+
         if(request()->expectsJson()) {
             $videos = Video::all();
 
@@ -21,7 +22,7 @@ class VideoController extends Controller
                         'id' => $video->id,
                         'title' => $video->title,
                         'description' => $video->description,
-                        'video_url' => $video->video,
+                        'video_url' => $video->video_url,
                         'created_at' => $video->created_at,
                         'updated_at' => $video->updated_at,
                     ]
