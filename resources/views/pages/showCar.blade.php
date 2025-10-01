@@ -184,7 +184,7 @@
                                                 @foreach ($car['flags'] as $flag)
                                                     <li>
                                                         @if (isset($flag['image']))
-                                                            <img src="{{ asset('storage/' . $flag['image']) }}"
+                                                            <img src="{{ $flag['image'] }}"
                                                                 alt="Flag Image"
                                                                 style="height: 24px; width: auto; margin-right: 8px;">
                                                         @endif
