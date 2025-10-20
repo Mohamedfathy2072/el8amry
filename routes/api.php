@@ -3,19 +3,18 @@
 use Illuminate\Support\Facades\Route;
 use App\Enums\RefurbishmentStatus;
 
-use App\Http\Controllers\{
-    AuthController,
+use App\Http\Controllers\{AuthController,
     CarController,
     CalculatorController,
     BookController,
     QuizController,
     QuizAnswerController,
     QuizMatchController,
+    ScheduleController,
     StartAdController,
     FinancingRequestController,
     NotificationController as ApiNotificationController,
-    SavedSearchController
-};
+    SavedSearchController};
 
 use App\Http\Controllers\Admin\{
     BannerController,
@@ -122,6 +121,10 @@ Route::post('notifications/read', [ApiNotificationController::class, 'markAsRead
  * CARS ROUTES
  * ======================================================
  */
+Route::post('/contact-us/mail', [ContactUsController::class, 'sendMessage']);
+
+Route::get('/schedules', [ScheduleController::class, 'index']);
+Route::post('/schedules', [ScheduleController::class, 'store']);
 Route::prefix('cars')->group(function () {
     // Public car routes
     Route::get('/', [CarController::class, 'pagination']);
@@ -232,10 +235,8 @@ Route::prefix('calculator')->group(function () {
  * BOOKING ROUTES
  * ======================================================
  */
-Route::prefix('book')->middleware('auth:api')->group(function () {
-    Route::post('/', [BookController::class, 'makeAppointment']);
-    Route::get('/getBookedCars', [BookController::class, 'getBookedCars']);
-});
+    Route::post('book/', [BookController::class, 'makeAppointment']);
+    Route::get('book/getBookedCars', [BookController::class, 'getBookedCars']);
 
 /**
  * ======================================================

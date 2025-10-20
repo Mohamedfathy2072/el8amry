@@ -13,18 +13,24 @@ class BookController extends Controller
     {
         $request->validate([
             'car_id' => 'required|integer|exists:cars,id',
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|regex:/^01[0-9]{9}$/',
             'address' => 'nullable|string',
             'appointment_date' => 'required|date|after:now',
             'appointment_time' => 'required|date_format:H:i',
         ]);
+
         return Book::create([
             'car_id' => $request->car_id,
-            'user_id' => auth()->user()->id,
+//            'user_id' => auth()->id(),
+            'name' => $request->name,
+            'phone' => $request->phone,
             'address' => $request->address ?? '-',
             'appointment_date' => $request->appointment_date,
             'appointment_time' => $request->appointment_time,
         ]);
     }
+
 
     public function getBookedCars()
     {

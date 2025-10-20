@@ -11,7 +11,9 @@ class Book extends Model
         'user_id',
         'address',
         'appointment_date',
-        'appointment_time'
+        'appointment_time',
+        'name',
+        'phone'
     ];
 
     public function car()

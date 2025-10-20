@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Draftech;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ContactUsMail;
 use App\Models\ContactUs;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ContactUsController extends BaseController
 {
@@ -46,6 +48,29 @@ class ContactUsController extends BaseController
             'data' => $contact
         ], 201);
     }
+    public function sendMessage(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+            'country' => 'required|string|max:255',
+            'message' => 'required|string|max:5000',
+        ]);
+
+
+        // إرسال البريد الإلكتروني
+        Mail::to('mohamed.fathy30112000@gmail.com')->send($contactUsMail = new ContactUsMail(
+            $request->name,
+            $request->email,
+            $request->phone,
+            $request->country,
+            $request->message
+        ));
+
+        return response()->json(['message' => 'Your message has been sent successfully!'], 200);
+    }
+
 
 
 }
