@@ -84,7 +84,7 @@ Route::prefix('auth')->group(function () {
     // Shared auth-protected routes under auth prefix
     Route::post('/favourites/toggle/{carId}', [FavouriteController::class, 'toggleFavourite'])->middleware('auth:api');
     Route::get('/favourites', [FavouriteController::class, 'myFavourites'])->middleware('auth:api');
-    Route::post('/financing-requests', [FinancingRequestController::class, 'store'])->middleware('auth:api');
+    Route::post('/financing-requests', [FinancingRequestController::class, 'store']);
     Route::get('/requests', [FinancingRequestController::class, 'index'])->middleware('auth:api');
     Route::post('/cancel-requests', [FinancingRequestController::class, 'cancel'])->middleware('auth:api');
     Route::get('saved-searches', [SavedSearchController::class, 'index'])->middleware('auth:api');
@@ -101,11 +101,10 @@ Route::prefix('auth')->group(function () {
  * FINANCING REQUESTS ROUTES
  * ======================================================
  */
-Route::prefix('financing-requests')->middleware('auth:api')->group(function () {
-    Route::post('/', [FinancingRequestController::class, 'store']);
-    Route::get('/', [FinancingRequestController::class, 'index']);
-    Route::post('/cancel', [FinancingRequestController::class, 'cancel']);
-});
+
+    Route::post('financing-requests/', [FinancingRequestController::class, 'store']);
+    Route::get('financing-requests/', [FinancingRequestController::class, 'index']);
+    Route::post('financing-requests/cancel', [FinancingRequestController::class, 'cancel']);
 
 /**
  * ======================================================

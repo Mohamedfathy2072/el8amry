@@ -9,8 +9,8 @@ class FinancingRequest extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id',
-        'first_name',
+        'car_id',
+        'full_name',
         'second_name',
         'email',
         'governorate_id',
@@ -38,12 +38,12 @@ class FinancingRequest extends Model
         'brand_id',
         'status',
         'wallet',
-        'club_membership_card',
+        'net_income',
         'medical_insurance_card',
         'owned_car_license_front',
-        'owned_car_license_back',
+        'perfered_down_payment',
         'reference_phone_number',
-        'person_relation'
+        'phone'
     ];
 
 

@@ -13,48 +13,14 @@ class FinancingRequestController extends Controller
 
     public function store(StoreFinancingRequest $request)
     {
-        $user = auth()->user();
-
-        $inProcessCount = FinancingRequest::where('user_id', $user->id)
-            ->where('status', 'In process')
-            ->count();
-
-        if ($inProcessCount >= 1) {
-            return response()->json([
-                'can_apply' => false,
-                'message' => 'You cannot apply for financing more than 1 times while in process.'
-            ], 200);
-        }
-
+        // الحصول على البيانات بعد التحقق من صحتها
         $data = $request->validated();
-        $data['user_id'] = $user->id;
-        $data['status'] = 'In process';
 
-        $data['card_front'] = $request->file('card_front')->store('cards', 'public');
-        $data['card_back'] = $request->file('card_back')->store('cards', 'public');
-
-        if ($request->hasFile('club_membership_card')) {
-            $data['club_membership_card'] = $request->file('club_membership_card')->store('documents', 'public');
-        }
-
-        if ($request->hasFile('medical_insurance_card')) {
-            $data['medical_insurance_card'] = $request->file('medical_insurance_card')->store('documents', 'public');
-        }
-
-        if ($request->hasFile('owned_car_license_front')) {
-            $data['owned_car_license_front'] = $request->file('owned_car_license_front')->store('documents', 'public');
-        }
-
-        if ($request->hasFile('owned_car_license_back')) {
-            $data['owned_car_license_back'] = $request->file('owned_car_license_back')->store('documents', 'public');
-        }
-
-        // مفيش تحديث للwallet هنا خالص
-
+        // إنشاء طلب التمويل مباشرة
         $financing = FinancingRequest::create($data);
 
         return response()->json([
-            'can_apply' => true,
+            'success' => true,
             'data' => $financing,
             'message' => 'Financing request created successfully.'
         ], 201);
