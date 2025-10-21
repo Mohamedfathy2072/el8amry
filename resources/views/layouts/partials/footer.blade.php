@@ -1,5 +1,5 @@
-  <?php 
-    $appName = config('app.app') === 'kalksat' ? 'klaksatauto' : 'Driftech';
+  <?php
+    $appName = config('app.app') === 'kalksat' ? 'Elghamry' : 'Driftech';
     $logo = config('app.app') === 'kalksat' ? 'logo-brand.webp' : 'draftech-logo.svg';
   ?>
 <footer id="footer" class="footer">

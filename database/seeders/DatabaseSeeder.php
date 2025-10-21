@@ -38,10 +38,10 @@ class DatabaseSeeder extends Seeder
     {
         User::firstOrCreate(
             [
-                'email' => 'admin@klaksat.com',
+                'email' => 'admin@Elghamry.com',
                 'name' => [
-                    'ar' => 'كلاكسات',
-                    'en' => 'klaksat'
+                    'ar' => 'الغمري',
+                    'en' => 'Elghamry'
                 ],
                 'phone' => '01032163233',
                 'is_active' => true
@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
                 'is_active' => true
             ]
         );
-      
+
         $fakerAr = Faker::create('ar_EG');
         $fakerEn = Faker::create('en_US');
 
