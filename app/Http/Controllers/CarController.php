@@ -261,4 +261,15 @@ class CarController extends Controller
         $request->merge(['owner_id' => $user->id]);
         return $this->pagination($request, $sort_direction, $sort_by, $page, $per_page);
     }
+
+    public function getModelsByBrand($brandId)
+    {
+        $models = \App\Models\CarModel::where('brand_id', $brandId)
+            ->select('id', 'name')
+            ->orderBy('name')
+            ->get();
+
+        return response()->json($models);
+    }
+
 }

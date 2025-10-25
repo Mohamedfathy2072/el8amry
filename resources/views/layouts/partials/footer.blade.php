@@ -7,6 +7,6 @@
     &copy; Copyright <strong><span>{{$appName}}</span></strong>. All Rights Reserved
   </div>
   <div class="credits">
-    Designed by <a href="https://www.linkedin.com/in/solieman-snossy/">Solieman Snossy</a>
+    Designed by <a href="https://www.linkedin.com/in/solieman-snossy/"></a>
   </div>
 </footer>

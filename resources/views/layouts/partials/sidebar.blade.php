@@ -155,9 +155,25 @@
             @endif
         </a>
       </li>
+          <li class="nav-item">
+              <a class="nav-link collapsed" data-bs-target="#schedules-nav" data-bs-toggle="collapse" href="#">
+                  <i class="bi bi-calendar-week"></i>
+                  <span>Schedules</span>
+                  <i class="bi bi-chevron-down ms-auto"></i>
+              </a>
+              <ul id="schedules-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+                  <li>
+                      <a href="{{ route('dashboard.schedules.index') }}">
+                          <i class="bi bi-circle"></i><span>All Schedules</span>
+                      </a>
+                  </li>
 
-      <li class="nav-heading">Features</li>
-        @if(config('app.app') !== 'kalksat')
+              </ul>
+          </li>
+
+
+
+          <li class="nav-heading">Features</li>
           <li class="nav-item">
             <li class="nav-item">
                 <a class="nav-link collapsed" href="{{ route('admin.financing-requests.index') }}">
@@ -170,7 +186,6 @@
                 <span>Quizzes</span>
             </a>
           </li><!-- End Quizzes Page Nav -->
-        @endif
           <li class="nav-item">
             <a class="nav-link collapsed" href="{{ route('admin.dashboard') }}">
                 <i class="bi bi-question-circle"></i>

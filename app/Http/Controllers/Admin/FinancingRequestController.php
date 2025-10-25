@@ -10,48 +10,34 @@ class FinancingRequestController extends Controller
 {
     public function index(Request $request)
     {
-        $query = FinancingRequest::with(['user', 'governorate', 'area', 'brand']);
+        $query = FinancingRequest::with('car');
 
-        if ($request->has('search')) {
+        if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('first_name', 'like', "%$search%")
-                  ->orWhere('second_name', 'like', "%$search%")
-                  ->orWhere('email', 'like', "%$search%")
-                  ->orWhere('status', 'like', "%$search%")
-                  ->orWhere('car_model', 'like', "%$search%")
-                  ->orWhere('manufacture_year', 'like', "%$search%")
-                  ->orWhere('car_type', 'like', "%$search%")
-                  ->orWhere('applicant_type', 'like', "%$search%")
-                  ->orWhereHas('user', function($q) use ($search) {
-                      $q->where('name', 'like', "%$search%");
-                  })
-                  ->orWhereHas('governorate', function($q) use ($search) {
-                      $q->where('name', 'like', "%$search%");
-                  })
-                  ->orWhereHas('area', function($q) use ($search) {
-                      $q->where('name', 'like', "%$search%");
-                  })
-                  ->orWhereHas('brand', function($q) use ($search) {
-                      $q->where('name', 'like', "%$search%");
-                  });
+            $query->where(function ($q) use ($search) {
+                $q->where('full_name', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%")
+                    ->orWhere('phone', 'like', "%$search%")
+                    ->orWhereHas('car', function ($q) use ($search) {
+                        $q->where('description', 'like', "%$search%")
+                            ->orWhere('location', 'like', "%$search%");
+                    });
             });
         }
 
-        if ($request->has('status') && $request->status !== 'all') {
-            $query->where('status', $request->status);
-        }
 
         $requests = $query->latest()->paginate(10)->withQueryString();
-        
+
         return view('admin.requests.index', compact('requests'));
     }
 
     public function show($id)
     {
-        $financingRequest = FinancingRequest::with(['user', 'governorate', 'area', 'brand'])->findOrFail($id);
+        $financingRequest = FinancingRequest::with('car')->findOrFail($id);
+
         return view('admin.requests.show', compact('financingRequest'));
     }
+
 
     public function updateStatus(Request $request, FinancingRequest $financingRequest)
     {
@@ -61,7 +47,7 @@ class FinancingRequestController extends Controller
         ]);
 
         $financingRequest->update(['status' => $validated['status']]);
-        
+
         return back()->with('success', 'Request status updated successfully');
     }
 

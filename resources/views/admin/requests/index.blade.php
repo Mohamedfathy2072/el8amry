@@ -27,7 +27,7 @@
           <div class="row mb-3 mt-4 align-items-center">
             <div class="col-md-12">
               <form action="{{ route('admin.financing-requests.index') }}" method="GET" class="row g-3">
-                <div class="col-md-8">
+                <div class="col-md-12">
                   <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Search by name, email, status, etc..." value="{{ request('search') }}">
                     <button class="btn btn-primary" type="submit">
@@ -40,15 +40,7 @@
                     @endif
                   </div>
                 </div>
-                <div class="col-md-3">
-                  <select name="status" class="form-select" onchange="this.form.submit()">
-                    <option value="all" {{ request('status') === 'all' || request('status') === null ? 'selected' : '' }}>All Statuses</option>
-                    <option value="In process" {{ request('status') === 'In process' ? 'selected' : '' }}>In Process</option>
-                    <option value="Accepted" {{ request('status') === 'Accepted' ? 'selected' : '' }}>Accepted</option>
-                    <option value="Rejected" {{ request('status') === 'Rejected' ? 'selected' : '' }}>Rejected</option>
-                    <option value="Cancelled" {{ request('status') === 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
-                  </select>
-                </div>
+
               </form>
             </div>
           </div>
@@ -60,7 +52,7 @@
                   <th>ID</th>
                   <th>User</th>
                   <th>Email</th>
-                  <th>Status</th>
+                  <th>Phone number</th>
                   <th>Requested At</th>
                   <th>Actions</th>
                 </tr>
@@ -69,17 +61,11 @@
                 @forelse($requests as $request)
                   <tr>
                     <td>{{ $request->id }}</td>
-                    <td>{{ $request->first_name }} {{ $request->second_name }}</td>
+                    <td>{{ $request->full_name }} </td>
                     <td>{{ $request->email }}</td>
-                    <td>
-                      <span class="badge bg-{{ 
-                        $request->status === 'In process' ? 'warning' : 
-                        ($request->status === 'Rejected' ? 'danger' : 'success') 
-                      }}">
-                        {{ ucfirst($request->status) }}
-                      </span>
-                    </td>
-                    <td>{{ $request->created_at->format('Y-m-d H:i') }}</td>
+                      <td>{{ $request->phone }}</td>
+
+                      <td>{{ $request->created_at->format('Y-m-d H:i') }}</td>
                     <td>
                       <a href="{{ route('admin.financing-requests.show', $request) }}" class="btn btn-sm btn-info" title="View">
                         <i class="bi bi-eye"></i>
@@ -100,7 +86,7 @@
                 @endforelse
             </tbody>
         </table>
-        
+
         <div class="d-flex justify-content-center">
             {{ $requests->links() }}
         </div>

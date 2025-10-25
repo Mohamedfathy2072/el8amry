@@ -65,4 +65,9 @@ class FinancingRequest extends Model
     {
         return $this->belongsTo(Brand::class);
     }
+    public function car()
+    {
+        return $this->belongsTo(Car::class);
+    }
+
 }

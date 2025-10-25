@@ -1,13 +1,13 @@
 <?php
 
-use App\Http\Controllers\Admin\{
-    BodyStyleController,
+use App\Http\Controllers\Admin\{BodyStyleController,
     BrandController,
     CarModelController,
     DashboardController,
     DriveTypeController,
     EngineTypeController,
     FinancingRequestController,
+    ScheduleController,
     TransmissionTypeController,
     TrimController,
     TypeController,
@@ -17,8 +17,7 @@ use App\Http\Controllers\Admin\{
     RolePermissionController,
     QuizController,
     VideoController,
-    PartnerController
-};
+    PartnerController};
 
 
 use App\Http\Controllers\Admin\NotificationController;
@@ -47,7 +46,7 @@ Route::prefix('admin')->group(function () {
             Route::post('/send', [NotificationController::class, 'send'])->name('admin.notifications.send');
         });
     });
-    
+
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
     Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
@@ -64,8 +63,8 @@ Route::middleware(['auth:admin'])->group(function () {
 
     Route::middleware('auth:admin')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-        
-        
+
+
         Route::resource('financing-requests', FinancingRequestController::class, [
             'names' => [
                 'index' => 'admin.financing-requests.index',
@@ -74,11 +73,18 @@ Route::middleware(['auth:admin'])->group(function () {
                 'destroy' => 'admin.financing-requests.destroy'
             ]
         ])->except(['create', 'edit', 'store']);
-        
+
         Route::patch('financing-requests/{financingRequest}/status', [FinancingRequestController::class, 'updateStatus'])
             ->name('admin.financing-requests.update-status');
 
-
+        Route::prefix('dashboard')->name('dashboard.')->group(function () {
+            Route::prefix('schedules')->name('schedules.')->group(function () {
+                Route::get('/', [ScheduleController::class, 'index'])->name('index');
+                Route::post('/', [ScheduleController::class, 'store'])->name('store');
+                Route::put('/{id}', [ScheduleController::class, 'update'])->name('update');
+                Route::delete('/{id}', [ScheduleController::class, 'destroy'])->name('destroy');
+            });
+        });
         Route::prefix('cars')->group(function () {
             Route::get('/', [CarController::class, 'index'])->name('admin.cars');
             Route::get('/{id}', [CarController::class, 'show'])->where(['id'=>'[0-9]+'])->name('admin.car.show');
@@ -87,6 +93,8 @@ Route::middleware(['auth:admin'])->group(function () {
             Route::get('/edit/{id}', [CarController::class, 'edit'])->name('admin.car.edit');
             Route::put('/{id}', [CarController::class, 'update'])->name('admin.car.update');
             Route::delete('/{id}', [CarController::class, 'destroy'])->name('admin.car.destroy');
+            Route::get('/get-models/{brandId}', [CarController::class, 'getModelsByBrand'])->name('admin.car.getModelsByBrand');
+
         });
 
 
