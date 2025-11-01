@@ -118,10 +118,10 @@ class CarResource extends JsonResource
                 'name' => $this->resource->brand?->name,
                 'image' => $this->resource->brand?->image ?? ''
             ] : null,
-            'model' => $this->resource->car_model_id ? [
-                'id' => (int) $this->resource->car_model_id,
-                'name' => $this->resource->carModel?->name,
+            'model' => $this->resource->car_model_name ? [
+                'name' => $this->resource->car_model_name,
             ] : null,
+
             'model_year' => $this->resource->model_year,
             'full_name' => trim(
                 ($this->resource->brand?->name ?? '') . ' '

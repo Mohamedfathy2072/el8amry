@@ -45,7 +45,7 @@
                 <tr>
                   <td>{{ $index + 1 }}</td>
                   <td>{{ $car['brand']['name'] ?? '-' }}</td>
-                  <td>{{ $car['CarModel']['name'] ?? '-' }}</td>
+                  <td>{{ $car['car_model_name'] ?? '-' }}</td>
                   <td>{{ $car['model_year'] ?? '-' }}</td>
                   <td>{{ $car['color'] ?? '-' }}</td>
                   <td>{{ $car['EngineType']['name'] ?? '-' }} ({{ $car['engine_capacity_cc'] ?? '0' }} cc)</td>

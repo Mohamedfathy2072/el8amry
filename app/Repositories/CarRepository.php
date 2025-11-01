@@ -48,8 +48,8 @@ class CarRepository implements CarRepositoryInterface
                 $query->where('brand_id', $brand->id);
             }
             if (empty($brand) && !empty($model)) {
-                $query->where('car_model_id', $model->id);
-            }
+                $model_name = $requestData['model'];
+                $query->where('car_model_name', 'like', "%{$model_name}%");            }
             if (empty($brand) && empty($model)) return ['data' => [], 'count' => 0];
         }
 
@@ -124,10 +124,8 @@ class CarRepository implements CarRepositoryInterface
 
         if(!empty($requestData['model'])){
             $model_name = $requestData['model'];
-            $model = CarModel::where('name->' . $this->locale, 'like', "%{$model_name}%")->first();
-            if (!empty($model)) {
-                $query->where('car_model_id', $model->id);
-            }
+            $query->where('car_model_name', 'like', "%{$search}%");
+
             if (empty($model)) return ['data' => [], 'count' => 0];
         }
 
@@ -239,7 +237,7 @@ class CarRepository implements CarRepositoryInterface
         // make new car
         $carDetails = [
             'brand_id'              => !empty($carData['brand']) ? (int) $carData['brand'] : null,
-            'car_model_id'          => !empty($carData['model']) ? (int) $carData['model'] : null,
+            'car_model_name'        => $carData['car_model_name'] ?? null,
             'model_year'            => !empty($carData['model_year']) ? (int) $carData['model_year'] : null,
             'license_expire_date'   => $carData['license_expire_date'] ?? null,
             'body_style_id'         => !empty($carData['body_style']) ? (int) $carData['body_style'] : null,
@@ -307,7 +305,7 @@ class CarRepository implements CarRepositoryInterface
                 ]);
             }
         }
-        
+
         // Handle conditions
         if (!empty($carData['conditions'])) {
             foreach ($carData['conditions'] as $cond) {
@@ -423,7 +421,7 @@ class CarRepository implements CarRepositoryInterface
     {
         $car->update([
             'brand_id'              => filled($data['brand']) ? (int) $data['brand'] : null,
-            'car_model_id'          => filled($data['model']) ? (int) $data['model'] : null,
+            'car_model_name'        => $carData['car_model_name'] ?? null,
             'model_year'            => filled($data['model_year']) ? (int) $data['model_year'] : null,
             'license_expire_date'   => $data['license_expire_date'] ?? null,
             'body_style_id'         => filled($data['body_style']) ? (int) $data['body_style'] : null,

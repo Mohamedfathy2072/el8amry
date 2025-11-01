@@ -28,7 +28,7 @@ class CreateCarRequest extends FormRequest
         return [
             // Car identification
             'brand' => 'required',
-            'model' => 'required',
+            'car_model_name' => 'required|string|max:255',
             'model_year' => 'required|numeric|min:1900|max:' . (date('Y') + 1),
             'location' => 'nullable|string|max:255',
             // Vehicle specifications

@@ -15,7 +15,7 @@ class Car extends Model
     use HasFactory,HasTranslations;
     protected $fillable = [
         'brand_id',
-        'car_model_id',
+        'car_model_name',
         'model_year',
         'license_expire_date',
         'body_style_id',

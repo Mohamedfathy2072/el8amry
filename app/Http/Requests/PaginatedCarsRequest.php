@@ -25,7 +25,7 @@ class PaginatedCarsRequest extends FormRequest
         return [
             'brand_id' => 'nullable|integer|exists:brands,id',
             'brand' => 'nullable|string',
-            'car_model_id' => 'nullable|integer|exists:car_models,id',
+            'car_model_name' => 'required|string|max:255',
             'model' => 'nullable|string',
             'model_year' => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
             'year' => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
@@ -63,7 +63,7 @@ class PaginatedCarsRequest extends FormRequest
             'transmission_type_id' => 'nullable|integer|exists:transmission_types,id',
             'body_style_id' => 'nullable|integer|exists:body_styles,id',
             'search' => 'nullable|string|max:255',
-            
+
             'car_types_ids'=>'nullable|array',
             'car_types_ids.*'=>'integer|exists:types,id',
 

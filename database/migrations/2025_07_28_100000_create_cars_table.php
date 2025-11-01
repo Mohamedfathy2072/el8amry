@@ -16,7 +16,7 @@ return new class extends Migration
 
             // Car identification
             $table->foreignId('brand_id')->nullable()->constrained()->onDelete('set null');
-            $table->foreignId('car_model_id')->nullable()->constrained()->onDelete('set null');
+            $table->string('car_model_name')->nullable();
             $table->year('model_year');
             $table->date('license_expire_date')->nullable(); // License Valid To
             $table->string('location')->nullable(); // Nasr City...

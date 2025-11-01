@@ -10,7 +10,9 @@ class CarFactory extends Factory
     {
         return [
             'brand_id' => \App\Models\Brand::inRandomOrder()->first()->id,  // جلب علامة السيارة عشوائيًا من قاعدة البيانات
-            'car_model_id' => \App\Models\CarModel::inRandomOrder()->first()->id,  // جلب موديل السيارة عشوائيًا
+            'car_model_name' => $this->faker->randomElement([
+                'Civic', 'Corolla', 'Elantra', 'Camry', 'Accord', 'Sonata', 'Octavia', 'Tiguan', 'Sportage', 'Tucson'
+            ]),
             'model_year' => $this->faker->year(),
             'license_expire_date' => $this->faker->optional()->date(),
             'body_style_id' => \App\Models\BodyStyle::inRandomOrder()->first()->id,  // جلب نوع الهيكل عشوائيًا

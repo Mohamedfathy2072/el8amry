@@ -68,10 +68,8 @@
                                             <!-- Model -->
                                             <div class="col-md-4">
                                                 <label for="inputModel" class="form-label">Model</label>
-                                                <select class="form-select" id="inputModel" name="model" disabled>
-                                                    <option value="" selected>Select Brand First...</option>
-                                                </select>
-                                                @error('model')
+                                                <input type="text" class="form-control" id="inputModel" name="car_model_name" placeholder="Enter car model name">
+                                                @error('car_model_name')
                                                 <div class="invalid-feedback d-block">{{ $message }}</div>
                                                 @enderror
                                             </div>
@@ -82,15 +80,6 @@
                                                 <label for="inputDate" class="form-label">Model Year</label>
                                                 <input type="number" class="form-control" id="inputDate" name="model_year" placeholder="year">
                                             </div>
-                                            <div class="col-md-4">
-                                                <label for="inputName" class="form-label">Car Name</label>
-                                                <input type="text" class="form-control" id="inputName" name="name" placeholder="Enter car name" >
-                                                @error('name')
-                                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-
-
                                         </div>
 
                                         <div class="row g-3">
@@ -144,6 +133,10 @@
                                             <div class="col-md-4">
                                                 <label for="inputColorEN" class="form-label">Color (EN)</label>
                                                 <input type="text" class="form-control" id="exampleColorInputEN" name="color_en" title="Choose your color en">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="inputLocation" class="form-label">Location</label>
+                                                <input type="text" class="form-control" id="inputLocation" name="location" title="Enter your location">
                                             </div>
                                         </div>
 
@@ -276,33 +269,189 @@
                                 <div id="collapseTrim" class="accordion-collapse collapse" aria-labelledby="headingTrim" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
                                         <div class="row g-3">
+                                            <!-- Price -->
+                                            <div class="col-md-4">
+                                                <label for="inputPrice" class="form-label">Price</label>
+                                                <input type="number" class="form-control" id="inputPrice" name="price">
+                                            </div>
+
+                                            <!-- Discount -->
+                                            <div class="col-md-4">
+                                                <label for="inputDiscount" class="form-label">Discount</label>
+                                                <input type="number" class="form-control" id="inputDiscount" name="discount">
+                                            </div>
+
+                                            <!-- Monthly Installment -->
+                                            <div class="col-md-4">
+                                                <label for="inputInstallment" class="form-label">Monthly Installment</label>
+                                                <input type="number" class="form-control" id="inputInstallment" name="monthly_installment">
+                                            </div>
+
+                                            <!-- Down Payment -->
+                                            <div class="col-md-4">
+                                                <label for="inputDownpayment" class="form-label">Down Payment</label>
+                                                <input type="number" class="form-control" id="inputDownpayment" name="down_payment">
+                                            </div>
+
+                                            <!-- Trim -->
+                                            <div class="col-md-4">
+                                                <label for="inputTrim" class="form-label">Trim</label>
+                                                <select id="inputTrim" class="form-select" name="trim">
+                                                    <option value="" selected>Choose...</option>
+                                                    @foreach ($trim as $item)
+                                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
 
                                             <!-- Images Upload -->
                                             <div class="col-md-4">
                                                 <label for="formFile" class="form-label">Images Upload</label>
                                                 <input class="form-control" type="file" id="formFile" name="images[]" multiple>
                                             </div>
-                                            <div class="col-md-12 mt-3">
-                                                <label for="inputNotes" class="form-label">Notes</label>
-                                                <textarea class="form-control" id="inputNotes" name="notes" rows="3" placeholder="Enter any notes about the car"></textarea>
-                                                @error('notes')
-                                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Flags and Features Section -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingSeven">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                                        Part 4
+                                    </button>
+                                </h2>
+                                <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        @if(config('app.app') === 'kalksat')
+                                            <!-- Flags Section -->
+                                            <div class="row g-3">
+                                                <div class="col-12">
+                                                    <label for="inputFlags" class="form-label">Flags</label>
+                                                    <div id="flagContainer">
+                                                        <div class="flagInput row g-2 align-items-center">
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control" name="flags[0][name_ar]" placeholder="Flag Name (Ar)">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control" name="flags[0][name_en]" placeholder="Flag Name (En)">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <input type="file" class="form-control" name="flags[0][image]" accept="image/*">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button" class="btn btn-link" onclick="addFlagInput()">
+                                                        <i class="bi bi-plus-circle"></i> Add Flag
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            {{-- features --}}
+                                            <div class="row g-3">
+                                                <div class="col-12">
+                                                    <div id="featureBlockContainer">
+                                                        <!-- First Block of Fields -->
+                                                        <div class="feature-block mb-3">
+                                                            <!-- Feature Selection -->
+                                                            <div class="col-12 mb-3">
+                                                                <label class="form-label">Feature</label>
+                                                                <select class="form-select" name="features[0][name]">
+                                                                    <option value="" selected>Choose...</option>
+                                                                    @foreach($features as $feature)
+                                                                        <option value="{{ $feature->value }}">
+                                                                            {{ $feature->name }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+
+                                                            <!-- Label (English) -->
+                                                            <div class="col-12 mb-3">
+                                                                <label class="form-label">Label (English)</label>
+                                                                <input type="text" class="form-control" name="features[0][label][en]" placeholder="Enter label in English">
+                                                            </div>
+
+                                                            <!-- Label (Arabic) -->
+                                                            <div class="col-12 mb-3">
+                                                                <label class="form-label">Label (Arabic)</label>
+                                                                <input type="text" class="form-control" name="features[0][label][ar]" placeholder="Enter label in Arabic" dir="rtl">
+                                                            </div>
+
+                                                            <!-- Value (English) -->
+                                                            <div class="col-12 mb-3">
+                                                                <label class="form-label">Value (English)</label>
+                                                                <input type="text" class="form-control" name="features[0][value][en]" placeholder="Enter value in English">
+                                                            </div>
+
+                                                            <!-- Value (Arabic) -->
+                                                            <div class="col-12 mb-3">
+                                                                <label class="form-label">Value (Arabic)</label>
+                                                                <input type="text" class="form-control" name="features[0][value][ar]" placeholder="Enter value in Arabic" dir="rtl">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Add More Button -->
+                                                    <button type="button" class="btn btn-link" onclick="addFeatureBlock()">
+                                                        <i class="bi bi-plus-circle"></i> Add More
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        @endif
+
+
+                                        <!-- Conditions Section -->
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                <div id="conditionBlockContainer">
+                                                    <!-- First Block of Fields -->
+                                                    <div class="condition-block mb-3">
+                                                        <div class="col-12">
+                                                            <label for="inputConditions" class="form-label">Conditions</label>
+                                                            <select class="form-select" name="conditions[0][name]">
+                                                                <option value="" selected>Choose...</option>
+                                                                @foreach ($conditions as $item)
+                                                                    <option value="{{ $item->value }}">
+                                                                        {{ $item->name }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-12">
+                                                            <label for="inputPart" class="form-label">Part</label>
+                                                            <input type="text" class="form-control" name="conditions[0][part]">
+                                                        </div>
+
+                                                        <div class="col-12">
+                                                            <label for="inputDescription" class="form-label">Description</label>
+                                                            <textarea class="form-control" name="conditions[0][description]" rows="3"></textarea>
+                                                        </div>
+
+                                                        <div class="col-12">
+                                                            <label for="inputConditionImage" class="form-label">Image</label>
+                                                            <input type="file" class="form-control" name="conditions[0][image]" accept="image/*">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Add More Button -->
+                                                <button type="button" class="btn btn-link" onclick="addConditionBlock()">
+                                                    <i class="bi bi-plus-circle"></i> Add More
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                         <div class="text-center mt-4">
-                            <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Submit</button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                             <button type="reset" class="btn btn-secondary">Reset</button>
                         </div>
-
                     </form>
                 </div>
             </div>
@@ -546,70 +695,5 @@
             conditionIndex++;
         }
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const requiredFields = ['inputBrand', 'inputModel', 'inputDate', 'formFile'];
-            const submitBtn = document.getElementById('submitBtn');
-
-            function checkFormCompletion() {
-                let allFilled = requiredFields.every(id => {
-                    const el = document.getElementById(id);
-                    if (!el) return false;
-
-                    if (el.type === 'file') {
-                        return el.files.length > 0;
-                    }
-
-                    return el.value && el.value.trim() !== '';
-                });
-
-                submitBtn.disabled = !allFilled;
-            }
-
-            // Attach listeners for change/input
-            requiredFields.forEach(id => {
-                const el = document.getElementById(id);
-                if (!el) return;
-                el.addEventListener('input', checkFormCompletion);
-                el.addEventListener('change', checkFormCompletion);
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const brandSelect = document.getElementById('inputBrand');
-            const modelSelect = document.getElementById('inputModel');
-
-            brandSelect.addEventListener('change', function () {
-                const brandId = this.value;
-
-                modelSelect.innerHTML = '<option value="">Loading...</option>';
-                modelSelect.disabled = true;
-
-                if (brandId) {
-                    fetch(`{{ url('admin/cars/get-models') }}/${brandId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            modelSelect.innerHTML = '<option value="">Choose...</option>';
-                            data.forEach(model => {
-                                const option = document.createElement('option');
-                                option.value = model.id;
-                                option.textContent = model.name.en;
-                                modelSelect.appendChild(option);
-                            });
-                            modelSelect.disabled = false;
-                        })
-                        .catch(error => {
-                            console.error('Error fetching models:', error);
-                            modelSelect.innerHTML = '<option value="">Error loading models</option>';
-                        });
-                } else {
-                    modelSelect.innerHTML = '<option value="">Select Brand First...</option>';
-                    modelSelect.disabled = true;
-                }
-            });
-        });
-    </script>
-
 
 @endsection

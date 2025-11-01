@@ -16,6 +16,7 @@ class CarService
 
     public function all()
     {
+
         try {
             return $this->carRepository->all();
         } catch (ModelNotFoundException $e) {
