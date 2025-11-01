@@ -16,6 +16,8 @@
 /public/build
 /public/hot
 /public/storage
+!/storage/app/public
+
 /public/assets/
 /node_modules/
 /storage/*.key
