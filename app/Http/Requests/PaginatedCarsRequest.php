@@ -25,7 +25,7 @@ class PaginatedCarsRequest extends FormRequest
         return [
             'brand_id' => 'nullable|integer|exists:brands,id',
             'brand' => 'nullable|string',
-            'car_model_name' => 'required|string|max:255',
+            'car_model_name' => 'string|max:255',
             'model' => 'nullable|string',
             'model_year' => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
             'year' => 'nullable|integer|min:1900|max:' . (date('Y') + 1),
@@ -97,22 +97,12 @@ class PaginatedCarsRequest extends FormRequest
 
     public function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
     {
-        if (request()->expectsJson()) {
-            // For API requests, return JSON response with validation errors
-            throw new HttpResponseException(
-                response()->json([
-                    'errors' => $validator->errors(),
-                    'message' => 'Validation failed'
-                ], 422)
-            );
-        }
-
-        // For web requests, redirect back with validation errors
         throw new HttpResponseException(
-            redirect()
-                ->back()
-                ->withErrors($validator)
-                ->withInput()
+            response()->json([
+                'errors' => $validator->errors(),
+                'message' => 'Validation failed'
+            ], 422)
         );
     }
+
 }
